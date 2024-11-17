@@ -77,11 +77,11 @@ public final class MainTeleOp extends LinearOpMode {
         // initialize PID controller for claw
         clawPID = new PIDController(Kp, Ki, Kd);
 
-        // create GamepadEx instances
+        //GamepadEx instances
         GamepadEx gamepadEx1 = new GamepadEx(gamepad1);
         GamepadEx gamepadEx2 = new GamepadEx(gamepad2);
 
-        // Initialization loop
+        // initialization loop
         while (opModeInInit()) {
             gamepadEx1.readButtons();
 
@@ -133,12 +133,12 @@ public final class MainTeleOp extends LinearOpMode {
             // intake control
             intakeMotor.setPower(gamepadEx1.getTrigger(RIGHT_TRIGGER) - gamepadEx1.getTrigger(LEFT_TRIGGER));
 
-            // Field-centric driving
+            // field-centric driving (maybe)
             if (useFieldCentric) {
                 // implement field-centric logic here
             }
 
-            // Update telemetry
+            // update telemetry
             mTelemetry.addData("Claw Position", clawServo.getPosition());
             mTelemetry.addData("Arm Power", armMotor.getPower());
             mTelemetry.addData("Wrist Position", wristServo.getPosition());
