@@ -27,7 +27,7 @@ public class PIDController {
     }
 
     /**
-     * calculatesPID output based on target and current values.
+     * calculate PID output based on target and current values.
      *
      * @param target The desired target value.
      * @param current The current sensor/feedback value.
@@ -36,21 +36,21 @@ public class PIDController {
     public double calculateOutput(double target, double current) {
         double error = target - current;
 
-        // Proportional term
+        // proportional term
         double pTerm = pidGains.getKp() * error;
 
-        // Integral term with anti-windup consideration
+        // integral term
         double iTerm = pidGains.getKi() * integrator.update(error);
 
-        // Derivative term using differentiator
+        // derivative term
         double dTerm = pidGains.getKd() * differentiator.update(error);
 
-        // Combine terms and return filtered output
+        // combine terms and return filtered output
         return filter.update(pTerm + iTerm + dTerm);
     }
 
     /**
-     * Sets new PID gains for live tuning.
+     * sets new PID gains for live tuning (i think hopefully)
      *
      * @param kp The proportional gain.
      * @param ki The integral gain.
@@ -76,7 +76,7 @@ public class PIDController {
 
         double output = calculateOutput(targetPosition, currentPosition);
 
-        // Ensure output is within the motor power range (-1 to 1)
+        // makes sure output is within the motor power range (-1 to 1)
         output = Math.max(-1.0, Math.min(1.0, output));
 
         motor.setPower(output);
