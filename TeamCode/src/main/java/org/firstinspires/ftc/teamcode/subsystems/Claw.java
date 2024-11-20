@@ -19,7 +19,7 @@ public class Claw {
     public void toggleClaw() {
         claw.toggle();
         claw.run();
-    }
+    } //put through robot class
 
     public void setClamped(boolean clamped) {
         claw.setActivated(clamped);
