@@ -1,41 +1,44 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.arcrobotics.ftclib.hardware.ServoEx;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoControllerEx;
+import org.firstinspires.ftc.teamcode.util.SimpleServoPivot;
 
 public class Claw {
 
+    public static final double DEPOSIT_ANGLE = 180.0;
+    public static final double CLAMP_ANGLE = 0.0;
 
-    public static final double CLAW_OPEN_POSITION = 1.0;
-    public static final double CLAW_CLOSED_POSITION = 0.0;
-
-
-    private final Servo clawServo;
-
+    private final SimpleServoPivot claw;
 
     public Claw(HardwareMap hardwareMap) {
-        this.clawServo = clawServo;
-        close();
+        claw = new SimpleServoPivot(DEPOSIT_ANGLE, CLAMP_ANGLE, SimpleServoPivot.getGoBildaServo(hardwareMap, "cls"));
+        setClamped(false);
     }
 
-
-    public void open() {
-        clawServo.setPosition(CLAW_OPEN_POSITION);
+    public void toggleClaw() {
+        claw.toggle();
+        claw.run();
     }
 
-
-    public void close() {
-        clawServo.setPosition(CLAW_CLOSED_POSITION);
+    public void setClamped(boolean clamped) {
+        claw.setActivated(clamped);
+        claw.run();
     }
 
+    public boolean getClamped() {
+        return claw.isActivated();
+    }
 
-    public void toggle() {
-        if (clawServo.getPosition() == CLAW_CLOSED_POSITION) {
-            open();
-        } else {
-            close();
-        }
+    public void run() {
+        claw.run();
+    }
+
+    public double getCurrentAngle() {
+        return claw.isActivated() ? DEPOSIT_ANGLE : CLAMP_ANGLE;
+    }
+
+    public boolean isActivated() {
+        return claw.isActivated();
     }
 }
