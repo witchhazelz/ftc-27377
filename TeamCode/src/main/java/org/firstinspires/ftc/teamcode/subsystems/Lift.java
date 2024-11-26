@@ -21,10 +21,10 @@ public class Lift {
     //boolean to check if the lift is in motion
     public boolean isMoving;
 
-    private DcMotor motor1; // first motor for the lift
-    private DcMotor motor2; // second motor for the lift
-    private LiftState currentState; // current state of the lift
-    private double targetPosition; // target position for the lift
+    private DcMotor motor1; // first motor for lift
+    private DcMotor motor2; // second motor for lift
+    private LiftState currentState; // current state of lift
+    private double targetPosition; // target position for lift
 
     // Constructor
     public Lift(DcMotor motor1, DcMotor motor2, double maxLiftSpeed, double liftAcceleration, double liftPositionTolerance) {
@@ -42,7 +42,7 @@ public class Lift {
         this.motor2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
-    // method to set the target position for the lift
+    // method to set the target position for lift
     public void setTargetPosition(double position) {
         this.targetPosition = position;
         this.currentState = LiftState.LIFTING;
@@ -54,7 +54,7 @@ public class Lift {
         switch (currentState) {
             case LIFTING:
                 if (Math.abs(currentPosition - targetPosition) > liftPositionTolerance) {
-                    // move motors towards the target position
+                    // move motors towards target position
                     double speed = calculateSpeed(currentPosition);
                     motor1.setPower(speed);
                     motor2.setPower(speed);
