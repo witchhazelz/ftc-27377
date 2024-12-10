@@ -24,7 +24,7 @@ public class PIDController {
 
     public void setReference(double reference) {
         this.reference = reference;
-        integralSum = 0; // Reset integral sum on reference change
+        integralSum = 0; // reset integral sum on reference change
     }
 
     public double calculate(double currentPosition, double derivative) {
