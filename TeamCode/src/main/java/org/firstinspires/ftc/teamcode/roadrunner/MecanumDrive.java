@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.roadrunner;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.normalizeRadians;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
@@ -53,6 +55,8 @@ import java.util.List;
 
 @Config
 public final class MecanumDrive {
+    private double headingOffset = 0;
+
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -485,5 +489,29 @@ public final class MecanumDrive {
                 defaultTurnConstraints,
                 defaultVelConstraint, defaultAccelConstraint
         );
+    }
+
+    public void setCurrentHeading(double angle) {
+        headingOffset = normalizeRadians(pose.heading.toDouble() - angle);
+    }
+
+    public void setFieldCentricPowers(PoseVelocity2d powers) {
+        // Counter-rotate translation vector by current heading
+        Vector2d linearVel = powers.linearVel;
+        double theta = -normalizeRadians(pose.heading.toDouble() - headingOffset);
+        double cos = Math.cos(theta);
+        double sin = Math.sin(theta);
+        double x = linearVel.x;
+        double y = linearVel.y;
+        double xCommand = x * cos - y * sin;
+        double yCommand = y * cos + x * sin;
+
+        setDrivePowers(new PoseVelocity2d(
+                new Vector2d(
+                        xCommand,
+                        yCommand
+                ),
+                powers.angVel
+        ));
     }
 }
