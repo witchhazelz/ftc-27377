@@ -1,47 +1,81 @@
-package org.firstinspires.ftc.teamcode.controls.controllers;
+package org.firstinspires.ftc.teamcode.control.controller;
 
-import com.qualcomm.robotcore.util.ElapsedTime;
+import static java.lang.Math.abs;
+import static java.lang.Math.signum;
 
-public class PIDController {
-    private double Kp;
-    private double Ki;
-    private double Kd;
-    private double reference;
-    private double lastError;
-    private double integralSum;
-    private double maxIntegralSum;
-    private ElapsedTime timer;
+import org.firstinspires.ftc.teamcode.controls.motion.Differentiator;
+import org.firstinspires.ftc.teamcode.controls.motion.Integrator;
+import org.firstinspires.ftc.teamcode.controls.motion.State;
+import org.firstinspires.ftc.teamcode.controls.filters.Filter;
+import org.firstinspires.ftc.teamcode.controls.filters.NoFilter;
+import org.firstinspires.ftc.teamcode.controls.controllers.gainmatrices.PIDGains;
 
-    public PIDController(double Kp, double Ki, double Kd, double maxIntegralSum) {
-        this.Kp = Kp;
-        this.Ki = Ki;
-        this.Kd = Kd;
-        this.maxIntegralSum = maxIntegralSum;
-        this.integralSum = 0;
-        this.lastError = 0;
-        this.timer = new ElapsedTime();
+public class PIDController implements FeedbackController {
+
+    private PIDGains gains = new PIDGains();
+    private State target = new State();
+
+    private final Filter derivFilter;
+    private final Differentiator differentiator = new Differentiator();
+    private final Differentiator filterDiff = new Differentiator();
+    private final Integrator integrator = new Integrator();
+
+    private State error = new State();
+    private double errorIntegral, filteredErrorDerivative, rawErrorDerivative;
+
+    public PIDController() {
+        this(new NoFilter());
     }
 
-    public void setReference(double reference) {
-        this.reference = reference;
-        integralSum = 0; // reset integral sum on reference change
+    public PIDController(Filter derivFilter) {
+        this.derivFilter = derivFilter;
     }
 
-    public double calculate(double currentPosition, double derivative) {
-        double error = reference - currentPosition;
-        integralSum += error * timer.seconds();
+    public void setGains(PIDGains gains) {
+        this.gains = gains;
+    }
 
-        if (integralSum > maxIntegralSum) {
-            integralSum = maxIntegralSum;
-        }
-        if (integralSum < -maxIntegralSum) {
-            integralSum = -maxIntegralSum;
-        }
+    /**
+     * @param measurement Only the X attribute of the {@link State} parameter is used as feedback
+     */
+    public double calculate(State measurement) {
+        State lastError = error;
+        error = target.minus(measurement);
 
-        double output = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
-        lastError = error;
-        timer.reset();
+        if (signum(error.x) != signum(lastError.x)) reset();
+        errorIntegral = integrator.getIntegral(error.x);
+        rawErrorDerivative = differentiator.getDerivative(error.x);
+        filteredErrorDerivative = filterDiff.getDerivative(derivFilter.calculate(error.x));
+
+        double output = (gains.kP * error.x) + (gains.kI * errorIntegral) + (gains.kD * filteredErrorDerivative);
+
+        stopIntegration(abs(output) >= gains.maxOutputWithIntegral && signum(output) == signum(error.x));
 
         return output;
+    }
+
+    public void setTarget(State target) {
+        this.target = target;
+    }
+
+    public double getFilteredErrorDerivative() {
+        return filteredErrorDerivative;
+    }
+
+    public double getRawErrorDerivative() {
+        return rawErrorDerivative;
+    }
+
+    public double getErrorIntegral() {
+        return errorIntegral;
+    }
+
+    public void stopIntegration(boolean stopIntegration) {
+        integrator.stopIntegration(stopIntegration);
+    }
+
+    public void reset() {
+        integrator.reset();
+        derivFilter.reset();
     }
 }
