@@ -1,34 +1,35 @@
-package org.firstinspires.ftc.teamcode.control.motion
+package org.firstinspires.ftc.teamcode.controls.motion
 
 import org.firstinspires.ftc.teamcode.controls.gainmatrices.FeedforwardGains
 import org.firstinspires.ftc.teamcode.controls.gainmatrices.FullStateGains
+
 
 data class State
 
 @JvmOverloads
 constructor(
-        @JvmField val x: Double = 0.0,
-        @JvmField val v: Double = 0.0,
-        @JvmField val a: Double = 0.0,
-        @JvmField val j: Double = 0.0,
-        ) {
+    @JvmField val x: Double = 0.0,
+    @JvmField val v: Double = 0.0,
+    @JvmField val a: Double = 0.0,
+    @JvmField val j: Double = 0.0,
+) {
 
     operator fun plus(other: State): State {
         return State(
-                x + other.x,
-                v + other.v,
-                a + other.a,
-                j + other.j,
-                )
+            x + other.x,
+            v + other.v,
+            a + other.a,
+            j + other.j,
+        )
     }
 
     operator fun unaryMinus(): State {
         return State(
-                -x,
-                -v,
-                -a,
-                -j,
-                )
+            -x,
+            -v,
+            -a,
+            -j,
+        )
     }
 
     operator fun minus(other: State): State {
@@ -37,18 +38,18 @@ constructor(
 
     operator fun times(gains: FullStateGains): State {
         return State(
-                x * gains.pGain,
-                v * gains.vGain,
-                a * gains.aGain,
-                )
+            x * gains.pGain,
+            v * gains.vGain,
+            a * gains.aGain,
+        )
     }
 
     operator fun times(gains: FeedforwardGains): State {
         return State(
-                0.0,
-                v * gains.kV,
-                a * gains.kA,
-                )
+            0.0,
+            v * gains.kV,
+            a * gains.kA,
+        )
     }
 
     /**
