@@ -43,13 +43,13 @@ public class Lift {
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // set up PID gains
-        controller.setGains(PIDGainsKt);
+        controller.setGains(PIDGainsKt); //honestly, I'm not even sure how to fix this error and im too tired to fix it so
     }
 
     /**
-     * Move lift to a target position in linear inches.
+     * move lift to a target position in linear inches
      *
-     * @param targetPositionInches Target position in linear inches.
+     * @param targetPositionInches target position in linear inches
      */
     public void moveToPosition(double targetPositionInches) {
         // convert linear target position to radians
@@ -57,7 +57,7 @@ public class Lift {
     }
 
     /**
-     * Run the lift system (should be called repeatedly in a loop).
+     * run lift system (should be called repeatedly in a loop)
      */
     public void run() {
         // read current position in radians
@@ -81,7 +81,7 @@ public class Lift {
     }
 
     /**
-     * manually control the lift with a specified power, scaled for safety.
+     * manually control the lift with a specified power
      *
      * @param power Motor power (-1.0 to 1.0)
      */
@@ -91,10 +91,10 @@ public class Lift {
     }
 
     /**
-     * scale power based on current position and linear motion constraints.
+     * scale power based on current position and linear motion constraints
      *
-     * @param power Raw power input.
-     * @return Scaled power.
+     * @param power Raw power input
+     * @return Scaled power
      */
     private double scalePowerForLinearMotion(double power) {
         // example scaling-reduce power as the lift approaches its maximum range
@@ -111,9 +111,9 @@ public class Lift {
     }
 
     /**
-     * get current position of the lift in linear inches.
+     * get current position of the lift in linear inches
      *
-     * @return current position in linear inches.
+     * @return current position in linear inches
      */
     public double getPosition() {
         return currentPositionRadians * INCHES_PER_RADIAN;
