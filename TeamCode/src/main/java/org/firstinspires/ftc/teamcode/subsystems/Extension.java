@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.control.controller.PIDController;
+import org.firstinspires.ftc.teamcode.controls.controllers.PIDController;
 import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
 import org.firstinspires.ftc.teamcode.controls.motion.State;
 
@@ -38,14 +38,14 @@ public class Extension {
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlideMotor");
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        // Motor configuration
-        leftSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // DO NOT DO THIS THING EVER. DO NOT RUN IT AT ALL.
+        //leftSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //rightSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //leftSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //rightSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //leftSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //rightSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Initialize PID controllers
         leftController.setGains(pidGains);

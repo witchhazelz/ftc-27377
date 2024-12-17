@@ -1,14 +1,15 @@
-package org.firstinspires.ftc.teamcode.control.controller;
+package org.firstinspires.ftc.teamcode.controls.controllers;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 
+import org.firstinspires.ftc.teamcode.controls.controllers.FeedbackController;
 import org.firstinspires.ftc.teamcode.controls.motion.Differentiator;
 import org.firstinspires.ftc.teamcode.controls.motion.Integrator;
 import org.firstinspires.ftc.teamcode.controls.motion.State;
 import org.firstinspires.ftc.teamcode.controls.filters.Filter;
 import org.firstinspires.ftc.teamcode.controls.filters.NoFilter;
-import org.firstinspires.ftc.teamcode.controls.controllers.gainmatrices.PIDGains;
+import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
 
 public class PIDController implements FeedbackController {
 

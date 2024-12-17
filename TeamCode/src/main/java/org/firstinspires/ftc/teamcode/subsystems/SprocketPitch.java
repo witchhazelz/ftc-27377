@@ -6,15 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.control.controller.PIDController;
+import org.firstinspires.ftc.teamcode.controls.controllers.PIDController;
 import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
-import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGainsKt;
 import org.firstinspires.ftc.teamcode.controls.motion.State;
 
-public class Lift {
+public class SprocketPitch {
 
     // Constants
-    public static PIDGains pidGains = new PIDGains(0.5, 0.4, 0.01, 1.0);
     private static final double kG = 0.1; // gravity compensation constant
     private static final double MAX_VOLTAGE = 13.0;
     private static final double TICKS_PER_REV = 1440.0; // example value, adjust based on encoder specs
@@ -29,21 +27,30 @@ public class Lift {
 
     // Position tracking
     private double targetPositionRadians = 0.0;
+
+    //do motor encoder thing, set that, then do the math yada yada, then after istantiate in constructor class
     private double currentPositionRadians = 0.0;
 
     private final ElapsedTime timer = new ElapsedTime();
 
-    public Lift(HardwareMap hardwareMap) {
+    public SprocketPitch(HardwareMap hardwareMap) {
         // initialize hardware
         liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+        // set up PID gains PLEASE CHANGE THESE VALUES OR WE EILL BE INSANELY COOKED NAD I WILL CRY SO MUCH ANF YOU WILL HAVE TO BUY ME
+    //STAR OCEAN THE SECOND STORY R IN ORDER FOR ME TO BE OKAY
+        public static PIDGains pidGains = new PIDGains(
+                0.005,
+                0.002,
+                0,
+                Double.POSITIVE_INFINITY
+        );
 
-        // set up PID gains
-        controller.setGains(PIDGainsKt); //honestly, I'm not even sure how to fix this error and im too tired to fix it so
+    public SprocketPitch(DcMotorEx liftMotor, VoltageSensor batteryVoltageSensor) {
+        this.liftMotor = liftMotor;
+        this.batteryVoltageSensor = batteryVoltageSensor;
     }
 
     /**
