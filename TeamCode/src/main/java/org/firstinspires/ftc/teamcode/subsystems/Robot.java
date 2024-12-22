@@ -17,7 +17,7 @@ public final class Robot {
 
     private final BulkReader bulkReader;
 
-    // Slow mode flag
+    // slow mode flag
     private boolean slowModeEnabled = false;
 
     public Robot(HardwareMap hardwareMap, Pose2d startPose) {
