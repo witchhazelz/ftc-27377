@@ -3,14 +3,13 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.controls.controllers.PIDController;
 import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
 import org.firstinspires.ftc.teamcode.controls.motion.State;
 
-public class SprocketPitch {
+public class Pitch {
 
     // Constants
     private static final double kG = 0.1; // gravity compensation constant
@@ -33,7 +32,7 @@ public class SprocketPitch {
 
     private final ElapsedTime timer = new ElapsedTime();
 
-    public SprocketPitch(HardwareMap hardwareMap) {
+    public Pitch(HardwareMap hardwareMap) {
         // initialize hardware
         liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
@@ -48,7 +47,7 @@ public class SprocketPitch {
                 Double.POSITIVE_INFINITY
         );
 
-    public SprocketPitch(DcMotorEx liftMotor, VoltageSensor batteryVoltageSensor) {
+    public Pitch(DcMotorEx liftMotor, VoltageSensor batteryVoltageSensor) {
         this.liftMotor = liftMotor;
         this.batteryVoltageSensor = batteryVoltageSensor;
     }
