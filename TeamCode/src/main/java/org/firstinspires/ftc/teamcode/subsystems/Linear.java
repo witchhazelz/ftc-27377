@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.controls.controllers.PIDController;
 import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
 import org.firstinspires.ftc.teamcode.controls.motion.State;
 
-public class ZainsLinear {
+public class Linear {
 
     public static PIDGains pidGains = new PIDGains(0.5, 0.4, 0.01, 1.0);
     private static final double kG = 0.1;
