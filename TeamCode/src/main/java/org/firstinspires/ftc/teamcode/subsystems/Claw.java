@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.util.SimpleServoPivot;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
 
-    public static final double DEPOSIT_ANGLE = 180.0;
-    public static final double CLAMP_ANGLE = 0.0;
+    public static final double DEPOSIT_ANGLE = 180.0;// angle_intial
+    public static final double CLAMP_ANGLE = 0.0;//angle_activated
 
     private final SimpleServoPivot claw;
 
@@ -40,5 +41,21 @@ public class Claw {
 
     public boolean isActivated() {
         return claw.isActivated();
+    }
+
+    public void printTelemetry(){
+
+    }
+
+    public void stop() {
+        claw.setActivated(true);
+    }
+    public void close()
+    {
+        claw.setActivated(true);
+    }
+    public boolean isOpen()
+    {
+        return !(claw.isActivated());
     }
 }

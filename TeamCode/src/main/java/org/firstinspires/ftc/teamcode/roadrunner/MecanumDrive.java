@@ -57,6 +57,7 @@ import java.util.List;
 public final class MecanumDrive {
     private double headingOffset = 0;
 
+
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -513,5 +514,7 @@ public final class MecanumDrive {
                 ),
                 powers.angVel
         ));
+    }
+    public void printTelemetry() {
     }
 }

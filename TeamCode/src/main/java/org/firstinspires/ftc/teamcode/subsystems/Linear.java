@@ -11,18 +11,20 @@ import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
 import org.firstinspires.ftc.teamcode.controls.motion.State;
 
 public class Linear {
-
+    // constants
     public static PIDGains pidGains = new PIDGains(0.5, 0.4, 0.01, 1.0);
     private static final double kG = 0.1;
     private static final double MAX_VOLTAGE = 13.0;
     private static final double INCHES_PER_TICK = 0.008;
 
+    //hardware and controller
     private DcMotorEx leftSlideMotor = null;
     private DcMotorEx rightSlideMotor = null;
     private VoltageSensor batteryVoltageSensor = null;
     private final PIDController leftController = new PIDController();
     private final PIDController rightController = new PIDController();
 
+    // more constants
     private double leftTargetPosition = 0.0;
     private double rightTargetPosition = 0.0;
     private double leftCurrentPosition = 0.0;
@@ -33,6 +35,8 @@ public class Linear {
     private final ElapsedTime timer = new ElapsedTime();
 
     public void LinearSlides(HardwareMap hardwareMap) {
+
+        //initilaization of motors
         leftSlideMotor = hardwareMap.get(DcMotorEx.class, "leftSlideMotor");
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlideMotor");
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.util.BulkReader;
 
-@Config
+//@Config
 public final class Robot {
 
     public final MecanumDrive drivetrain;
@@ -74,7 +74,7 @@ public final class Robot {
 
     private void controlPitch() {
         if (!pitch.isAtTargetPosition()) {
-            pitch.moveToTargetPosition();
+            pitch.moveToPosition();
         }
 
         // run pitch subsystem
