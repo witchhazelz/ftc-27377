@@ -52,6 +52,14 @@ public class SimpleDrivetrain {
         setPowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
 
+    public void stop(){
+        backLeft.setPower(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
+    }
+
+
 
     public void printTelemetry() {
         telemetry.addData("Status", "Initialized");

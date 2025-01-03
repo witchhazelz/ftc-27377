@@ -9,7 +9,8 @@ import org.firstinspires.ftc.teamcode.util.BulkReader;
 //@Config
 public final class Robot {
 
-    public final MecanumDrive drivetrain;
+    //public final MecanumDrive drivetrain;
+    public final SimpleDrivetrain drivetrain;
     public final Claw claw;
     public final Extension extension;
     public final Pitch pitch;
@@ -17,21 +18,22 @@ public final class Robot {
     public final BulkReader bulkReader;
 
     public Robot(HardwareMap hardwareMap, Pose2d startPose) {
-        drivetrain = new MecanumDrive(hardwareMap, startPose);
+        //drivetrain = new MecanumDrive(hardwareMap, startPose);
+        drivetrain = new SimpleDrivetrain();
         bulkReader = new BulkReader(hardwareMap);
         claw = new Claw(hardwareMap);
         extension = new Extension(hardwareMap);
         pitch = new Pitch(hardwareMap);
     }
 
-    public void readSensors() {
-        bulkReader.bulkRead();
-        drivetrain.updatePoseEstimate();
-    }
+//    public void readSensors() {
+//        bulkReader.bulkRead();
+//        drivetrain.updatePoseEstimate();
+//    }
 
     public void run() {
         // read sensor data first
-        readSensors();
+        //readSensors();
 
         // control subsystems
         controlClaw();
