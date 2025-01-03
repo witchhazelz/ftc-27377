@@ -9,13 +9,18 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class SimpleDrivetrain {
-    private DcMotorEx frontLeft, frontRight, backLeft, backRight;
+    private static DcMotorEx frontLeft;
+    private static DcMotorEx frontRight;
+    private static DcMotorEx backLeft;
+    private static DcMotorEx backRight;
+
+    private IMU imu;
 
     public void init(HardwareMap hardwareMap){
-        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeftMotor");
-        frontRight = hardwareMap.get(DcMotorEx.class, "frontRightMotor");
-        backLeft = hardwareMap.get(DcMotorEx.class, "backLeftMotor");
-        backRight = hardwareMap.get(DcMotorEx.class, "backRightMotor");
+        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
+        backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
+        backRight = hardwareMap.get(DcMotorEx.class, "backRight");
 
         frontLeft.setDirection(DcMotorEx.Direction.FORWARD);
         frontRight.setDirection(DcMotorEx.Direction.REVERSE);
@@ -24,7 +29,7 @@ public class SimpleDrivetrain {
 
     }
 
-    private void setPowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
+    private static void setPowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
          double maxSpeed = 1.0;
          maxSpeed = Math.max(maxSpeed, Math.abs(frontLeftPower));
          maxSpeed = Math.max(maxSpeed, Math.abs(frontRightPower));
@@ -43,7 +48,7 @@ public class SimpleDrivetrain {
         }
 
          // Thanks to FTC16072 for sharing this code!!
-         public void drive(double forward, double right, double rotate) {
+         public static void drive(double forward, double right, double rotate) {
          double frontLeftPower = forward + right + rotate;
          double frontRightPower = forward - right - rotate;
          double backLeftPower = forward - right + rotate;
@@ -54,6 +59,22 @@ public class SimpleDrivetrain {
 
     public void stop(){
         setPowers(0,0,0,0);
+    }
+
+    public void driveFieldRelative (double forward, double right, double rotate){
+
+        double robotAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        // convert to polar
+        double theta = Math.atan2(forward, right);
+        double r = Math.hypot(forward, right);
+        // rotate angle
+        theta = AngleUnit.normalizeRadians(theta - robotAngle);
+
+        // convert back to cartesian
+        double newForward = r * Math.sin(theta);
+        double newRight = r * Math.cos(theta);
+
+        SimpleDrivetrain.drive(newForward, newRight, rotate);
     }
 
 

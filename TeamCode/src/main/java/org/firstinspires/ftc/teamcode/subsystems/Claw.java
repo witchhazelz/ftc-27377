@@ -13,7 +13,7 @@ public class Claw {
     private final SimpleServoPivot claw;
 
     public Claw(HardwareMap hardwareMap) {
-        claw = new SimpleServoPivot(DEPOSIT_ANGLE, CLAMP_ANGLE, SimpleServoPivot.getGoBildaServo(hardwareMap, "cls"));
+        claw = new SimpleServoPivot(DEPOSIT_ANGLE, CLAMP_ANGLE, SimpleServoPivot.getGoBildaServo(hardwareMap, "claw"));
         setClamped(false);
     }
 
