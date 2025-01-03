@@ -53,10 +53,7 @@ public class SimpleDrivetrain {
     }
 
     public void stop(){
-        backLeft.setPower(0);
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
+        setPowers(0,0,0,0);
     }
 
 

@@ -39,30 +39,30 @@ public final class Robot {
         controlClaw();
         controlExtension();
         controlPitch();
-        handleObstacles();
+        //handleObstacles();
 
         // print telemetry for future debugging hehe
         printTelemetry();
     }
 
     private void controlClaw() {
-        boolean isClawOpen = claw.isOpen();
-        boolean isExtensionExtended = extension.isExtended();
-
-        if (isClawOpen) {
-            //if claw is open, check if extension needs to be retracted
-            if (isExtensionExtended) {
-                extension.retract();
-            } else {
-                // if extension is not extended, we can close claw (maybe?)
-                claw.close();
-            }
-        } else {
-            // if claw is closed, we may want to extend arm
-            if (!isExtensionExtended) {
-                extension.extend();
-            }
-        }
+//        boolean isClawOpen = claw.isOpen();
+//        boolean isExtensionExtended = extension.isExtended();
+//
+//        if (isClawOpen) {
+//            //if claw is open, check if extension needs to be retracted
+//            if (isExtensionExtended) {
+//                extension.retract();
+//            } else {
+//                // if extension is not extended, we can close claw (maybe?)
+//                claw.close();
+//            }
+//        } else {
+//            // if claw is closed, we may want to extend arm
+//            if (!isExtensionExtended) {
+//                extension.extend();
+//            }
+//        }
 
         // run claw subsystem
         claw.run();
@@ -75,26 +75,26 @@ public final class Robot {
     }
 
     private void controlPitch() {
-        if (!pitch.isAtTargetPosition()) {
-            pitch.moveToPosition();
-        }
+//        if (!pitch.isAtTargetPosition()) {
+//            pitch.moveToPosition();
+//        }
 
         // run pitch subsystem
         pitch.run();
     }
 
-    private void handleObstacles() {
-        if (bulkReader.isObstacleDetected()) {
-            // if obstacle is detected, stop all movements
-            drivetrain.stop();
-            claw.stop();
-            extension.stop();
-            pitch.stop();
-        } else {
-            // if no obstacles, continue driving
-            drivetrain.drive();
-        }
-    }
+//    private void handleObstacles() {
+//        if (bulkReader.isObstacleDetected()) {
+//            // if obstacle is detected, stop all movements
+//            drivetrain.stop();
+//            claw.stop();
+//            extension.stop();
+//            pitch.stop();
+//        } else {
+//            // if no obstacles, continue driving
+//            drivetrain.drive();
+//        }
+//    }
 
     public void printTelemetry() {
         drivetrain.printTelemetry();

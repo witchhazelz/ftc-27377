@@ -8,8 +8,9 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+// This teleop has only field centric drivetrain code
 @TeleOp (name = "MecanumDriveSimple")
-public class MecanumDriveSimple extends LinearOpMode {
+public class TeleOp1 extends LinearOpMode {
 
     // mecanum drive motors
     private DcMotorEx frontLeft, frontRight, backLeft, backRight;
