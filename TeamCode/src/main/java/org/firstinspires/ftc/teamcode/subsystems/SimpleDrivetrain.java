@@ -30,16 +30,16 @@ public class SimpleDrivetrain {
     }
 
     private static void setPowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
-         double maxSpeed = 1.0;
-         maxSpeed = Math.max(maxSpeed, Math.abs(frontLeftPower));
-         maxSpeed = Math.max(maxSpeed, Math.abs(frontRightPower));
-         maxSpeed = Math.max(maxSpeed, Math.abs(backLeftPower));
-         maxSpeed = Math.max(maxSpeed, Math.abs(backRightPower));
-
-         frontLeftPower /= maxSpeed;
-         frontRightPower /= maxSpeed;
-         backLeftPower /= maxSpeed;
-         backRightPower /= maxSpeed;
+//         double maxSpeed = 1.0;
+//         maxSpeed = Math.max(maxSpeed, Math.abs(frontLeftPower));
+//         maxSpeed = Math.max(maxSpeed, Math.abs(frontRightPower));
+//         maxSpeed = Math.max(maxSpeed, Math.abs(backLeftPower));
+//         maxSpeed = Math.max(maxSpeed, Math.abs(backRightPower));
+//
+//         frontLeftPower /= maxSpeed;
+//         frontRightPower /= maxSpeed;
+//         backLeftPower /= maxSpeed;
+//         backRightPower /= maxSpeed;
 
          frontLeft.setPower(frontLeftPower);
          frontRight.setPower(frontRightPower);

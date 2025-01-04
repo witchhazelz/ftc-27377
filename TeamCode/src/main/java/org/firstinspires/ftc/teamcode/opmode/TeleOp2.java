@@ -43,9 +43,11 @@ public class TeleOp2 extends LinearOpMode {
 
             if (gamepad1.x){
                 claw.setPosition(OPEN);
+                // or claw.setToggleClaw();
             }
             else if (gamepad1.b){
                 claw.setPosition(CLOSED);
+                // or claw.setClamped();
             }
 
 

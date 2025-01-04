@@ -38,8 +38,8 @@ public class SimpleServoPivot {
     }
 
     public void updateAngles(double ANGLE_A, double ANGLE_B) {
-        this.ANGLE_INITIAL = ANGLE_A;
-        this.ANGLE_ACTIVATED = ANGLE_B;
+        this.ANGLE_INITIAL = ANGLE_A; // 180
+        this.ANGLE_ACTIVATED = ANGLE_B; // 0
     }
 
     /**
