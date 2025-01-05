@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SimpleDrivetrain;
 
 // TeleOp for both drivetrain and claw
 // THIS NEEDS FIXING
-@TeleOp
+@TeleOp (name = "CLaw and Drivetrain")
 public class TeleOp3 extends LinearOpMode {
     private double forward;
     private double right;

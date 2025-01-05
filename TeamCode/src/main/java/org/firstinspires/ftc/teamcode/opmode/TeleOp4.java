@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.controls.controllers.PIDController;
 import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
 import org.firstinspires.ftc.teamcode.subsystems.Linear;
 
-@TeleOp
+@TeleOp (name = "Linear")
 public class TeleOp4 extends LinearOpMode {
 
 
