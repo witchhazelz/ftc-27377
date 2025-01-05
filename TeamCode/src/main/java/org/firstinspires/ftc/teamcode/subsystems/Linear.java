@@ -18,9 +18,9 @@ public class Linear {
     private static final double INCHES_PER_TICK = 0.008;
 
     //hardware and controller
-    private DcMotorEx leftSlideMotor = null;
-    private DcMotorEx rightSlideMotor = null;
-    private VoltageSensor batteryVoltageSensor = null;
+    private DcMotorEx leftSlideMotor;
+    private DcMotorEx rightSlideMotor;
+    private VoltageSensor batteryVoltageSensor;
     private final PIDController leftController = new PIDController();
     private final PIDController rightController = new PIDController();
 
@@ -68,7 +68,9 @@ public class Linear {
         double leftPidOutput = leftController.calculate(new State(leftCurrentPosition));
         double rightPidOutput = rightController.calculate(new State(rightCurrentPosition));
 
+        // voltage compensation
         double voltageCompensation = MAX_VOLTAGE / batteryVoltageSensor.getVoltage();
+
         double leftTotalOutput = (leftPidOutput + kG) * voltageCompensation;
         double rightTotalOutput = (rightPidOutput + kG) * voltageCompensation;
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SimpleDrivetrain;
 
 // TeleOp for both drivetrain and claw
 // THIS NEEDS FIXING
+@TeleOp
 public class TeleOp3 extends LinearOpMode {
     private double forward;
     private double right;
