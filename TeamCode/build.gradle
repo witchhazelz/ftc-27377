@@ -1,19 +1,26 @@
-// Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 apply plugin: 'org.jetbrains.kotlin.android'
+
+buildscript {
+    ext.kotlin_version = '1.8.20'  // Set the Kotlin version here
+
+    repositories {
+        mavenCentral()
+        google()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"  // Kotlin plugin
+        classpath 'com.android.tools.build:gradle:8.7.2'
+    }
+}
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
 
     packagingOptions {
         jniLibs.useLegacyPackaging true
-    }
-}
-
-repositories {
-    maven {
-        url = 'https://maven.brott.dev/'
     }
 }
 
@@ -28,4 +35,7 @@ dependencies {
     implementation "com.acmerobotics.roadrunner:core:1.0.0"
     implementation "com.acmerobotics.roadrunner:actions:1.0.0"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.14"
+
+    // Kotlin standard library
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

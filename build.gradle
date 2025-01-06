@@ -5,16 +5,18 @@
  */
 
 buildscript {
-
-    ext.kotlin_version = '1.8.20'
+    ext.kotlin_version = '1.8.20'  // Define Kotlin version here
 
     repositories {
-        mavenCentral()
         google()
+        mavenCentral()  // Add mavenCentral in case we need it for Kotlin dependencies
     }
+
     dependencies {
         // Note for FTC Teams: Do not modify this yourself.
         classpath 'com.android.tools.build:gradle:8.7.2'
+
+        // Add Kotlin Gradle Plugin for the project
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -23,11 +25,9 @@ buildscript {
 // google() repository beginning with version 3.2 of the Android Gradle Plugin
 allprojects {
     repositories {
-        mavenCentral()
         google()
+        mavenCentral()
     }
 }
 
-repositories {
-    mavenCentral()
-}
+

@@ -17,10 +17,10 @@ public class SimpleDrivetrain {
     private IMU imu;
 
     public void init(HardwareMap hardwareMap){
-        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
-        backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeftMotor");
+        frontRight = hardwareMap.get(DcMotorEx.class, "frontRightMotor");
+        backLeft = hardwareMap.get(DcMotorEx.class, "backLeftMotor");
+        backRight = hardwareMap.get(DcMotorEx.class, "backRightMotor");
 
         frontLeft.setDirection(DcMotorEx.Direction.FORWARD);
         frontRight.setDirection(DcMotorEx.Direction.REVERSE);

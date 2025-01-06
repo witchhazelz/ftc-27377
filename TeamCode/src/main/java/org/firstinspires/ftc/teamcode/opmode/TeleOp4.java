@@ -9,8 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.controls.controllers.PIDController;
-import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
+
 import org.firstinspires.ftc.teamcode.subsystems.Linear;
 
 @TeleOp (name = "Linear")
