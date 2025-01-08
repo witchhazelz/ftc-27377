@@ -6,9 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.controls.controllers.PIDController;
-import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
-import org.firstinspires.ftc.teamcode.controls.motion.State;
+
 
 public class Linear {
     // PID variables
@@ -60,8 +58,6 @@ public class Linear {
         leftSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-//        leftController.setGains(pidGains);
-//        rightController.setGains(pidGains);
     }
 
     public void moveToPosition(double leftTargetPositionInches, double rightTargetPositionInches) {
@@ -73,14 +69,10 @@ public class Linear {
         leftCurrentPosition = leftSlideMotor.getCurrentPosition() * INCHES_PER_TICK;
         rightCurrentPosition = rightSlideMotor.getCurrentPosition() * INCHES_PER_TICK;
 
-//        `leftController.setTarget(new State(leftTargetPosition));
-//        rightController.setTarget(new State(rightTargetPosition));
-//
-//                double rightTotalOutput = (rightPidOutput + kG) * voltageCompensation;double leftPidOutput = leftController.calculate(new State(leftCurrentPosition));
-//        double rightPidOutput = rightController.calculate(new State(rightCurrentPosition));`
 
         // clculate PID output for left side
-        double leftError = leftTargetPosition - leftCurrentPosition;
+        double leftCurrentPosition1 = leftCurrentPosition;
+        double leftError = leftTargetPosition - leftCurrentPosition1;
 
         errorIntegral += leftError * timer.seconds();
         double leftErrorDerivative = (leftError - lastError) / timer.seconds();
@@ -94,6 +86,33 @@ public class Linear {
         errorIntegral += rightError * timer.seconds();
         double rightErrorDerivative = (rightError - lastError) / timer.seconds();
         lastError = leftError;
+        public void runManual(double leftPower, double rightPower) {
+            this.manualLeftPower = leftPower;
+            this.manualRightPower = rightPower;
+            leftSlideMotor.setPower(manualLeftPower);
+            rightSlideMotor.setPower(manualRightPower);
+        }
+
+        public void stop() {
+            leftSlideMotor.setPower(0.0);
+            rightSlideMotor.setPower(0.0);
+        }
+
+        public void getLeftPosition() {
+            return leftCurrentPosition1;
+        }
+
+        public double getRightPosition() {
+            return rightCurrentPosition;
+        }
+
+        public void printTelemetry() {
+            System.out.println("Left Target Position: " + leftTargetPosition + " inches");
+            System.out.println("Left Current Position: " + leftCurrentPosition1 + " inches");
+            System.out.println("Right Target Position: " + rightTargetPosition + " inches");
+            System.out.println("Right Current Position: " + rightCurrentPosition + " inches");
+        }
+    }
 
         double rightPidOutput = (kP * rightError) + (kI * errorIntegral) + (kD * rightErrorDerivative);
 
@@ -113,30 +132,4 @@ public class Linear {
         rightSlideMotor.setPower(rightTotalOutput);
     }
 
-    public void runManual(double leftPower, double rightPower) {
-        this.manualLeftPower = leftPower;
-        this.manualRightPower = rightPower;
-        leftSlideMotor.setPower(manualLeftPower);
-        rightSlideMotor.setPower(manualRightPower);
-    }
-
-    public void stop() {
-        leftSlideMotor.setPower(0.0);
-        rightSlideMotor.setPower(0.0);
-    }
-
-    public double getLeftPosition() {
-        return leftCurrentPosition;
-    }
-
-    public double getRightPosition() {
-        return rightCurrentPosition;
-    }
-
-    public void printTelemetry() {
-        System.out.println("Left Target Position: " + leftTargetPosition + " inches");
-        System.out.println("Left Current Position: " + leftCurrentPosition + " inches");
-        System.out.println("Right Target Position: " + rightTargetPosition + " inches");
-        System.out.println("Right Current Position: " + rightCurrentPosition + " inches");
-    }
-}
+ 

@@ -1,25 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 
-// EXSTENSION ONLY TELEOP
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 import org.firstinspires.ftc.teamcode.subsystems.Linear;
 
-@TeleOp (name = "Linear")
-public class TeleOp4 extends LinearOpMode {
-
-
+@TeleOp()
+public class TeleOp6 extends LinearOpMode {
 
     Linear linear = new Linear();
-
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -54,7 +44,6 @@ public class TeleOp4 extends LinearOpMode {
         }
 
     }
+
+    }
 }
-
-
-
