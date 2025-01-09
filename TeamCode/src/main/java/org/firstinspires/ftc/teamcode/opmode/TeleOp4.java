@@ -47,8 +47,8 @@ public class TeleOp4 extends LinearOpMode {
 
 
             linear.printTelemetry();
-            telemetry.addData("left current position",linear.getLeftPosition());
-            telemetry.addData("right current position",linear.getRightPosition());
+//            telemetry.addData("left current position",linear.getLeftPosition());
+//            telemetry.addData("right current position",linear.getRightPosition());
 
 
         }

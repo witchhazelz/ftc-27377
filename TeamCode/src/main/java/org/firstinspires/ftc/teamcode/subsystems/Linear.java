@@ -34,8 +34,8 @@ public class Linear {
     // more constants
     private double leftTargetPosition = 0.0;
     private double rightTargetPosition = 0.0;
-    private double leftCurrentPosition = 0.0;
-    private double rightCurrentPosition = 0.0;
+    private double leftCurrentPosition = 0.0 ;
+    private double rightCurrentPosition ;
     private double leftError;
     private double rightError;
     private double manualLeftPower = 0.0;
@@ -86,33 +86,7 @@ public class Linear {
         errorIntegral += rightError * timer.seconds();
         double rightErrorDerivative = (rightError - lastError) / timer.seconds();
         lastError = leftError;
-        public void runManual(double leftPower, double rightPower) {
-            this.manualLeftPower = leftPower;
-            this.manualRightPower = rightPower;
-            leftSlideMotor.setPower(manualLeftPower);
-            rightSlideMotor.setPower(manualRightPower);
-        }
 
-        public void stop() {
-            leftSlideMotor.setPower(0.0);
-            rightSlideMotor.setPower(0.0);
-        }
-
-        public void getLeftPosition() {
-            return leftCurrentPosition1;
-        }
-
-        public double getRightPosition() {
-            return rightCurrentPosition;
-        }
-
-        public void printTelemetry() {
-            System.out.println("Left Target Position: " + leftTargetPosition + " inches");
-            System.out.println("Left Current Position: " + leftCurrentPosition1 + " inches");
-            System.out.println("Right Target Position: " + rightTargetPosition + " inches");
-            System.out.println("Right Current Position: " + rightCurrentPosition + " inches");
-        }
-    }
 
         double rightPidOutput = (kP * rightError) + (kI * errorIntegral) + (kD * rightErrorDerivative);
 
@@ -131,5 +105,33 @@ public class Linear {
         leftSlideMotor.setPower(leftTotalOutput);
         rightSlideMotor.setPower(rightTotalOutput);
     }
+
+    public void runManual(double leftPower, double rightPower) {
+        this.manualLeftPower = leftPower;
+        this.manualRightPower = rightPower;
+        leftSlideMotor.setPower(manualLeftPower);
+        rightSlideMotor.setPower(manualRightPower);
+    }
+
+    public void stop() {
+        leftSlideMotor.setPower(0.0);
+        rightSlideMotor.setPower(0.0);
+    }
+
+    public double getLeftPosition() {
+        return leftCurrentPosition;
+    }
+
+    public double getRightPosition() {
+        return rightCurrentPosition;
+    }
+
+    public void printTelemetry() {
+        System.out.println("Left Target Position: " + leftTargetPosition + " inches");
+        System.out.println("Left Current Position: " + leftCurrentPosition + " inches");
+        System.out.println("Right Target Position: " + rightTargetPosition + " inches");
+        System.out.println("Right Current Position: " + rightCurrentPosition + " inches");
+    }
+}
 
  
