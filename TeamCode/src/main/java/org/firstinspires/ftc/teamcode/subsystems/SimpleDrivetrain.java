@@ -48,7 +48,7 @@ public class SimpleDrivetrain {
         }
 
          // Thanks to FTC16072 for sharing this code!!
-         public static void drive(double forward, double right, double rotate) {
+    public static void drive(double forward, double right, double rotate) {
          double frontLeftPower = forward + right + rotate;
          double frontRightPower = forward - right - rotate;
          double backLeftPower = forward - right + rotate;
