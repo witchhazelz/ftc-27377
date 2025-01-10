@@ -1,11 +1,9 @@
-package org.firstinspires.ftc.teamcode.subsystems;
-
+package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 
 public class Linear {
@@ -19,7 +17,7 @@ public class Linear {
     private double lastError = 0.0;
 
     // constants
-  //  public static PIDGains pidGains = new PIDGains(0.5, 0.4, 0.01, 1.0);
+    //  public static PIDGains pidGains = new PIDGains(0.5, 0.4, 0.01, 1.0);
     private static final double kG = 0.1;
     private static final double MAX_VOLTAGE = 13.0;
     private static final double INCHES_PER_TICK = 0.008;
@@ -28,14 +26,12 @@ public class Linear {
     private DcMotorEx leftSlideMotor;
     private DcMotorEx rightSlideMotor;
     private VoltageSensor batteryVoltageSensor;
-//    private final PIDController leftController = new PIDController();
-//    private final PIDController rightController = new PIDController();
 
     // more constants
     private double leftTargetPosition = 0.0;
     private double rightTargetPosition = 0.0;
-    private double leftCurrentPosition = 0.0 ;
-    private double rightCurrentPosition ;
+    private double leftCurrentPosition = 0.0;
+    private double rightCurrentPosition = 0.0;
     private double leftError;
     private double rightError;
     private double manualLeftPower = 0.0;
@@ -55,9 +51,14 @@ public class Linear {
         leftSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        leftSlideMotor.setDirection(DcMotorEx.Direction.REVERSE);
+
+
         leftSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+//        leftController.setGains(pidGains);
+//        rightController.setGains(pidGains);
     }
 
     public void moveToPosition(double leftTargetPositionInches, double rightTargetPositionInches) {
@@ -66,44 +67,9 @@ public class Linear {
     }
 
     public void run() {
-        leftCurrentPosition = leftSlideMotor.getCurrentPosition() * INCHES_PER_TICK;
-        rightCurrentPosition = rightSlideMotor.getCurrentPosition() * INCHES_PER_TICK;
 
-
-        // clculate PID output for left side
-        double leftCurrentPosition1 = leftCurrentPosition;
-        double leftError = leftTargetPosition - leftCurrentPosition1;
-
-        errorIntegral += leftError * timer.seconds();
-        double leftErrorDerivative = (leftError - lastError) / timer.seconds();
-        lastError = leftError;
-
-        double leftPidOutput = (kP * leftError) + (kI * errorIntegral) + (kD * leftErrorDerivative);
-
-        // calculate PID output for right
-        double rightError = rightTargetPosition - rightCurrentPosition;
-
-        errorIntegral += rightError * timer.seconds();
-        double rightErrorDerivative = (rightError - lastError) / timer.seconds();
-        lastError = leftError;
-
-
-        double rightPidOutput = (kP * rightError) + (kI * errorIntegral) + (kD * rightErrorDerivative);
-
-        // apply gravity compensation and voltage scaling
-
-        // voltage compensation
-        double voltageCompensation = MAX_VOLTAGE / batteryVoltageSensor.getVoltage();
-
-        double leftTotalOutput = (leftPidOutput + kG) * voltageCompensation;
-        double rightTotalOutput = (rightPidOutput + kG) * voltageCompensation;
-
-
-        leftTotalOutput = Math.max(-1.0, Math.min(1.0, leftTotalOutput));
-        rightTotalOutput = Math.max(-1.0, Math.min(1.0, rightTotalOutput));
-
-        leftSlideMotor.setPower(leftTotalOutput);
-        rightSlideMotor.setPower(rightTotalOutput);
+        // leftSlideMotor.setPower(leftTotalOutput);
+        // rightSlideMotor.setPower(rightTotalOutput);
     }
 
     public void runManual(double leftPower, double rightPower) {

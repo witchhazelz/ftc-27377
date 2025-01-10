@@ -1,135 +1,95 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotorEx; // Use DcMotorEx for advanced motor control
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.controls.controllers.PIDController;
-import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
-import org.firstinspires.ftc.teamcode.controls.motion.State;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class Pitch {
-
     // Constants
-    private static final double kG = 0.1; // gravity compensation constant
+    private static final double kG = 0.1; // Gravity compensation constant
     private static final double MAX_VOLTAGE = 13.0;
-    private static final double TICKS_PER_REV = 1440.0; // example value, adjust based on encoder specs
-    private static final double SPROCKET_RADIUS = 1.0; // radius in inches
+    private static final double TICKS_PER_REV = 1440.0; // Example value, adjust based on encoder specs
+    private static final double SPROCKET_RADIUS = 1.0; // Radius in inches
     private static final double RADIANS_PER_TICK = (2 * Math.PI) / TICKS_PER_REV;
-    private static final double INCHES_PER_RADIAN = SPROCKET_RADIUS; // linear distance per radian
+    private static final double INCHES_PER_RADIAN = SPROCKET_RADIUS; // Linear distance per radian
 
     // Hardware and controller
-    private final DcMotorEx liftMotor;
+    private final DcMotorEx liftMotor; // Use DcMotorEx for advanced motor control
     private final VoltageSensor batteryVoltageSensor;
-    private final PIDController controller = new PIDController();
 
-    // Position tracking
+    // PID variables
+    private double kP = 0.005; // Proportional gain
+    private double kI = 0.002; // Integral gain
+    private double kD = 0.0;   // Derivative gain
     private double targetPositionRadians = 0.0;
-
-    //do motor encoder thing, set that, then do the math yada yada, then after istantiate in constructor class
     private double currentPositionRadians = 0.0;
+    private double errorIntegral = 0.0;
+    private double lastError = 0.0;
 
     private final ElapsedTime timer = new ElapsedTime();
 
+    // Define constant power values for incremental movement
+    private static final double LIFT_UP_POWER = 0.5; // Power to move up
+    private static final double LIFT_DOWN_POWER = -0.5; // Power to move down
+
+    // Constructor
     public Pitch(HardwareMap hardwareMap) {
-        // initialize hardware
-        liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
+        // Initialize hardware
+        liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor"); // Use DcMotorEx for advanced control
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
-
-    }
-        // set up PID gains PLEASE CHANGE THESE VALUES OR WE EILL BE INSANELY COOKED NAD I WILL CRY SO MUCH ANF YOU WILL HAVE TO BUY ME
-    //STAR OCEAN THE SECOND STORY R IN ORDER FOR ME TO BE OKAY
-        public static PIDGains pidGains = new PIDGains(
-                0.005,
-                0.002,
-                0,
-                Double.POSITIVE_INFINITY
-        );
-
-    public Pitch(DcMotorEx liftMotor, VoltageSensor batteryVoltageSensor) {
-        this.liftMotor = liftMotor;
-        this.batteryVoltageSensor = batteryVoltageSensor;
     }
 
-    /**
-     * move lift to a target position in linear inches
-     *
-     * @param targetPositionInches target position in linear inches
-     */
     public void moveToPosition(double targetPositionInches) {
-        // convert linear target position to radians
+        // Convert linear target position to radians
         this.targetPositionRadians = targetPositionInches / INCHES_PER_RADIAN;
     }
 
-    /**
-     * run lift system (should be called repeatedly in a loop)
-     */
     public void run() {
-        // read current position in radians
+        // Read current position in radians
         currentPositionRadians = liftMotor.getCurrentPosition() * RADIANS_PER_TICK;
 
-        // set PID target
-        controller.setTarget(new State(targetPositionRadians));
+        // Calculate PID output
+        double error = targetPositionRadians - currentPositionRadians;
+        errorIntegral += error * timer.seconds();
+        double errorDerivative = (error - lastError) / timer.seconds();
+        lastError = error;
 
-        // calculate PID output
-        double pidOutput = controller.calculate(new State(currentPositionRadians));
+        double pidOutput = (kP * error) + (kI * errorIntegral) + (kD * errorDerivative);
 
-        // apply gravity compensation and voltage scaling
+        // Apply gravity compensation and voltage scaling
         double voltageCompensation = MAX_VOLTAGE / batteryVoltageSensor.getVoltage();
         double totalOutput = (pidOutput + kG) * voltageCompensation;
 
-        // clamp motor power between -1.0 and 1.0
+        // Clamp motor power between -1.0 and 1.0
         totalOutput = Math.max(-1.0, Math.min(1.0, totalOutput));
+
+        // Reverse the output power if necessary (maybe??)
+        totalOutput = -totalOutput; // Reverse the direction if needed
 
         // Apply power to motor
         liftMotor.setPower(totalOutput);
     }
 
-    /**
-     * manually control the lift with a specified power
-     *
-     * @param power Motor power (-1.0 to 1.0)
-     */
-    public void runManual(double power) {
-        double manualPower = scalePowerForLinearMotion(power);
-        liftMotor.setPower(manualPower);
+    public void controlLift(Gamepad gamepad) {
+        double leftTrigger = gamepad.left_trigger; // Get the value of the left trigger
+        double rightTrigger = gamepad.right_trigger; // Get the value of the right trigger
+
+        if (leftTrigger > 0.1) { // If the left trigger is pressed
+            runManual(LIFT_UP_POWER); // Move up at a constant power
+        } else if (rightTrigger > 0.1) { // If the right trigger is pressed
+            runManual(LIFT_DOWN_POWER); // Move down at a constant power
+        } else {
+            stop(); // Stop lift when no trigger is pressed
+        }
     }
 
-    /**
-     * scale power based on current position and linear motion constraints
-     *
-     * @param power Raw power input
-     * @return Scaled power
-     */
-    private double scalePowerForLinearMotion(double power) {
-        // example scaling-reduce power as the lift approaches its maximum range
-        double maxLinearPosition = 2 * Math.PI * SPROCKET_RADIUS; // maximum linear range in inches
-        double scalingFactor = 1.0 - Math.min(1.0, Math.abs((currentPositionRadians * INCHES_PER_RADIAN) / maxLinearPosition));
-        return power * scalingFactor;
+    private void runManual(double power) {
+        liftMotor.setPower(power); // Set the motor power
     }
 
-    /**
-     * stop lift motor.
-     */
-    public void stop() {
-        liftMotor.setPower(0.0);
-    }
-
-    /**
-     * get current position of the lift in linear inches
-     *
-     * @return current position in linear inches
-     */
-    public double getPosition() {
-        return currentPositionRadians * INCHES_PER_RADIAN;
-    }
-
-    /**
-     * debug telemetry data
-     */
-    public void printTelemetry() {
-        System.out.println("Target Position (inches): " + (targetPositionRadians * INCHES_PER_RADIAN));
-        System.out.println("Current Position (inches): " + getPosition());
+    private void stop() {
+        liftMotor.setPower(0); // Stop the motor
     }
 }
