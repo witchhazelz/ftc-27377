@@ -12,7 +12,7 @@ public class TeleOp10 extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        wrist.WristServo(hardwareMap);
+        wrist.init(hardwareMap);
 
 
 

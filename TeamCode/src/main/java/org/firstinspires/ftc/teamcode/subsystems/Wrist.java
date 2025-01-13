@@ -8,14 +8,14 @@ public class Wrist {
     public Servo leftServo;
     public Servo rightServo;
 
-    public double FORWARD = 0.5;
-    public double BACKWARD = 1;
-    public double DOWN = 0;
+    public double FORWARD = 0.4;
+    public static double BACKWARD = 0.2;
+    public static double DOWN = 0.6;
 
     public double leftServoPosition = leftServo.getPosition();
     public double rightServoPosition = rightServo.getPosition();
 
-    public void WristServo (HardwareMap hardwareMap){
+    public void init (HardwareMap hardwareMap){
         leftServo = hardwareMap.get(Servo.class, "leftServo");
         rightServo = hardwareMap.get(Servo.class, "rightServo");
 

@@ -26,6 +26,7 @@ public class Pitch {
 
     // Position tracking
     private double targetPositionRadians = 0.0;
+    //public boolean isFlat =
 
     //do motor encoder thing, set that, then do the math yada yada, then after istantiate in constructor class
     private double currentPositionRadians = 0.0;
@@ -124,7 +125,43 @@ public class Pitch {
     public double getPosition() {
         return currentPositionRadians * INCHES_PER_RADIAN;
     }
+    //do something like this:
+    // Add a boolean flag for flat state
+    private boolean isFlatFlag = false;  // default: not flat
 
+    /**
+     * sets pitch to flat or raised based on the current state
+     */
+    public void toggleFlat() {
+        if (isFlatFlag) {
+            moveToPosition(5.0);  // example target position for raised- adjust if needed
+            System.out.println("Raising to target position.");
+        } else {
+            moveToPosition(0.0);  // example target position for flat
+            System.out.println("Moving to flat position.");
+        }
+        isFlatFlag = !isFlatFlag;  // toggle the flag
+    }
+
+    /**
+     * check if the system is in a flat position
+     * @return true if flat false otherwise.
+     */
+    public boolean isFlat() {
+        double tolerance = 0.1;  // define a small tolerance for checking
+        return Math.abs(getPosition()) < tolerance;
+    }
+
+    /**
+     * enhanced run method to check flag and keep correct position.
+     */
+//    @Override
+//    public void run() {
+//        super.run();  // run the PID control (i guess)
+//        if (isFlatFlag && !isFlat()) {
+//            moveToPosition(0.0);  // keep moving to flat if not there
+//        }
+//    }
     /**
      * debug telemetry data
      */

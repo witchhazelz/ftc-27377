@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Pose2d;
+//import com.acmerobotics.dashboard.config.Config;
+//import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.util.BulkReader;
+
 
 //@Config
 public final class Robot {
@@ -14,11 +15,15 @@ public final class Robot {
     public final Claw claw;
     public final Extension extension;
     public final Pitch pitch;
+    public final Wrist wrist;
+
+   // Wrist wrist = new Wrist();
 
     public final BulkReader bulkReader;
 
-    public Robot(HardwareMap hardwareMap, Pose2d startPose) {
+    public Robot(HardwareMap hardwareMap) {
         //drivetrain = new MecanumDrive(hardwareMap, startPose);
+        wrist =  new Wrist();
         drivetrain = new SimpleDrivetrain();
         bulkReader = new BulkReader(hardwareMap);
         claw = new Claw(hardwareMap);

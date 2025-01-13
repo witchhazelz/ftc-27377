@@ -70,7 +70,7 @@ public class Linear {
         rightCurrentPosition = rightSlideMotor.getCurrentPosition() * INCHES_PER_TICK;
 
 
-        // clculate PID output for left side
+        // calculate PID output for left side
         double leftCurrentPosition1 = leftCurrentPosition;
         double leftError = leftTargetPosition - leftCurrentPosition1;
 
@@ -91,7 +91,6 @@ public class Linear {
         double rightPidOutput = (kP * rightError) + (kI * errorIntegral) + (kD * rightErrorDerivative);
 
         // apply gravity compensation and voltage scaling
-
         // voltage compensation
         double voltageCompensation = MAX_VOLTAGE / batteryVoltageSensor.getVoltage();
 
@@ -125,6 +124,8 @@ public class Linear {
     public double getRightPosition() {
         return rightCurrentPosition;
     }
+
+   // public double isEx
 
     public void printTelemetry() {
         System.out.println("Left Target Position: " + leftTargetPosition + " inches");
