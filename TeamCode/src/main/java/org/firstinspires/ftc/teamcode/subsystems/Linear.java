@@ -34,12 +34,14 @@ public class Linear {
     // more constants
     private double leftTargetPosition = 0.0;
     private double rightTargetPosition = 0.0;
-    private double leftCurrentPosition = 0.0 ;
-    private double rightCurrentPosition ;
+    private double leftCurrentPosition  ;
+    private double rightCurrentPosition  ;
     private double leftError;
     private double rightError;
     private double manualLeftPower = 0.0;
     private double manualRightPower = 0.0;
+
+    public double MAX_EXTENSION_INCHES;
 
     private final ElapsedTime timer = new ElapsedTime();
 
@@ -50,10 +52,15 @@ public class Linear {
         rightSlideMotor = hardwareMap.get(DcMotorEx.class, "rightSlideMotor");
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
+       // encoder = hardwareMap.get(DcMotorEx.encoder,)
+
         leftSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        leftSlideMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        rightSlideMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         leftSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -106,6 +113,20 @@ public class Linear {
     }
 
     public void runManual(double leftPower, double rightPower) {
+        double leftPositionInches = leftSlideMotor.getCurrentPosition() * INCHES_PER_TICK;
+        double rightPositionInches = rightSlideMotor.getCurrentPosition() * INCHES_PER_TICK;
+
+        if ((leftPower > 0 && leftPositionInches >= MAX_EXTENSION_INCHES) ||
+                (leftPower < 0 && leftPositionInches <= 0)) {
+            leftPower = 0;
+        }
+
+        if ((rightPower > 0 && rightPositionInches >= MAX_EXTENSION_INCHES) ||
+                (rightPower < 0 && rightPositionInches <= 0)) {
+            rightPower = 0;
+        }
+
+
         this.manualLeftPower = leftPower;
         this.manualRightPower = rightPower;
         leftSlideMotor.setPower(manualLeftPower);

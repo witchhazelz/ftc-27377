@@ -56,7 +56,7 @@ public class MainTeleOp extends LinearOpMode {
         claw.setClawOpen();//Claw initial position should be open
 
         pitch.getPosition();// pitch intial position should be 0
-        pitchPosition = pitch.getPosition();// pitch intial position should be 0
+        pitchPosition = pitch.getPosition() * ((2 * Math.PI) / 1440.0);// pitch intial position should be 0
         wrist.setDOWN(0); // wrist intitial position should be facing down
 
 
@@ -90,12 +90,14 @@ public class MainTeleOp extends LinearOpMode {
                 linear.moveToPosition(12, 12); // Midway
                 sleep(2000);
                 pitch.moveToPosition(0.1);
-                sleep(3000);
-                claw.setClawClosed();
+                //sleep(3000);
+               // claw.setClawClosed();
 
             }
             //set to score in baskets
             else if (gamepad1.a){
+                claw.setClawClosed();
+                sleep(2000);
                 pitch.moveToPosition(HIGH);
                 linear.moveToPosition(24,24);
                 wrist.setBACKWARD(BACKWARD);
@@ -109,6 +111,9 @@ public class MainTeleOp extends LinearOpMode {
 
             linear.run();
             pitch.run();
+
+
+            telemetry.addData("Pitch position", pitchPosition);
         }
 
     }

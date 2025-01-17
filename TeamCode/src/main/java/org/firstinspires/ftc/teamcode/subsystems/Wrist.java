@@ -12,6 +12,8 @@ public class Wrist {
     public static double BACKWARD = 0.2;
     public static double DOWN = 0.6;
 
+    public double newRightServoPosition;
+    public double newLeftServoPosition;
     public double leftServoPosition = leftServo.getPosition();
     public double rightServoPosition = rightServo.getPosition();
 
@@ -45,6 +47,15 @@ public class Wrist {
 
     }
 
+    public void plusOne(double rightServoPosition,double leftServoPosition){
+        newRightServoPosition = rightServoPosition + 0.1;
+        newLeftServoPosition = leftServoPosition + 0.1;
+    }
+
+    public void minusOne(double rightServoPosition,double leftServoPosition){
+        newRightServoPosition = rightServoPosition - 0.1;
+        newLeftServoPosition = leftServoPosition - 0.1;
+    }
     public void close(){
         leftServo.setPosition(0);
         rightServo.setPosition(0);

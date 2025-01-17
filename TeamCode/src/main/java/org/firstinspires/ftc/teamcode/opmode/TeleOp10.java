@@ -15,7 +15,6 @@ public class TeleOp10 extends LinearOpMode {
         wrist.init(hardwareMap);
 
 
-
         waitForStart();
 
         while (opModeIsActive()) {
@@ -23,12 +22,12 @@ public class TeleOp10 extends LinearOpMode {
             double joystickInput = gamepad1.left_stick_y;
 
             if (gamepad1.a){
-               wrist.setDOWN(0);
+               wrist.plusOne(wrist.rightServoPosition, wrist.leftServoPosition);
 
 
             }
             else if(gamepad1.y){
-                wrist.setBACKWARD(0.5);
+                wrist.minusOne(wrist.rightServoPosition, wrist.leftServoPosition);
 
             }
 
