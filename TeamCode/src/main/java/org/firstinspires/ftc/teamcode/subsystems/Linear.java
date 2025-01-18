@@ -18,8 +18,7 @@ public class Linear {
     private double errorIntegral = 0.0;
     private double lastError = 0.0;
 
-    // constants
-  //  public static PIDGains pidGains = new PIDGains(0.5, 0.4, 0.01, 1.0);
+
     private static final double kG = 0.1;
     private static final double MAX_VOLTAGE = 13.0;
     private static final double INCHES_PER_TICK = 0.008;
@@ -36,6 +35,7 @@ public class Linear {
     private double rightTargetPosition = 0.0;
     private double leftCurrentPosition  ;
     private double rightCurrentPosition  ;
+    public double linearAngle;
     private double leftError;
     private double rightError;
     private double manualLeftPower = 0.0;
@@ -138,6 +138,16 @@ public class Linear {
         rightSlideMotor.setPower(0.0);
     }
 
+    public void findLinearAngle() {
+        int encoderCounts = leftSlideMotor.getCurrentPosition();  // current encoder position
+        int countsPerRevolution = 1440;// number of ticks per revolution
+        double linearAngle = (encoderCounts / (double) countsPerRevolution) * 360.0;
+
+        //telemetry.addData("current Angle", angle);
+        //telemetry.update();
+
+    }
+
     public double getLeftPosition() {
         return leftCurrentPosition;
     }
@@ -153,6 +163,7 @@ public class Linear {
         System.out.println("Left Current Position: " + leftCurrentPosition + " inches");
         System.out.println("Right Target Position: " + rightTargetPosition + " inches");
         System.out.println("Right Current Position: " + rightCurrentPosition + " inches");
+        System.out.println("Linear slides current angle " + linearAngle);
     }
 }
 
