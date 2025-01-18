@@ -70,7 +70,7 @@ public final class Robot {
 //        }
 
         // run claw subsystem
-        claw.run();
+      //  claw.run();
     }
 
     private void controlExtension() {

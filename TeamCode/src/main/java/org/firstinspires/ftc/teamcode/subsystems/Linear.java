@@ -148,15 +148,27 @@ public class Linear {
 
     }
 
+//    public double getLeftPosition() {
+//        return leftCurrentPosition;
+//    }
+//
+//    public double getRightPosition() {
+//        return rightCurrentPosition;
+//    }
+
     public double getLeftPosition() {
-        return leftCurrentPosition;
+        double leftSlideInches = leftSlideMotor.getCurrentPosition() *INCHES_PER_TICK;
+        // leftCurrentPosition = leftSlideMotor.getCurrentPosition();
+        return leftSlideInches;
     }
+
 
     public double getRightPosition() {
-        return rightCurrentPosition;
+        double rightCurrentPosition = rightSlideMotor.getCurrentPosition();
+        double rightSlideInches = rightCurrentPosition *INCHES_PER_TICK;
+        //rightCurrentPosition = rightSlideMotor.getCurrentPosition();
+        return rightSlideInches;
     }
-
-   // public double isEx
 
     public void printTelemetry() {
         System.out.println("Left Target Position: " + leftTargetPosition + " inches");

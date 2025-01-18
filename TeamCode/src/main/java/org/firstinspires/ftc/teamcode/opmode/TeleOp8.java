@@ -40,6 +40,11 @@ public class TeleOp8 extends LinearOpMode {
     public static final double FORWARD = 0.4;
     public static final double BACKWARD = 0.6;
     public static final double DOWN = 0.8;
+    private static final double INCHES_PER_TICK = 0.008;
+
+
+    public double leftSlidesInches;
+    public double rightSlidesInches;
 
 
     @Override
@@ -68,7 +73,8 @@ public class TeleOp8 extends LinearOpMode {
         // leftSlideMotor.setDirection(DcMotorEx.Direction.FORWARD);
         // rightSlideMotor.setDirection(DcMotorEx.Direction.REVERSE);
         linear.LinearSlides(hardwareMap);
-
+        leftSlidesInches = linear.getLeftPosition();
+        rightSlidesInches = linear.getRightPosition();
 
         // Initialize pitch system
         liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
@@ -78,7 +84,7 @@ public class TeleOp8 extends LinearOpMode {
         claw = hardwareMap.get(Servo.class,"clawServo");
 
         // set initial position
-        claw.setPosition(OPEN);
+        claw.setPosition(CLOSED);
         double position = claw.getPosition();
 
 
@@ -95,9 +101,9 @@ public class TeleOp8 extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            double y = gamepad2.left_stick_y;
-            double x = -gamepad2.left_stick_x;
-            double rx = -gamepad2.right_stick_x * 0.5;
+            double y = gamepad1.left_stick_y;
+            double x = -gamepad1.left_stick_x;
+            double rx = -gamepad1.right_stick_x * 0.5;
 
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
@@ -109,7 +115,7 @@ public class TeleOp8 extends LinearOpMode {
             backLeft.setPower((rotY - rotX + rx) / denominator);
             backRight.setPower((rotY + rotX - rx) / denominator);
 
-            if (gamepad2.right_stick_button) {
+            if (gamepad1.right_stick_button) {
                 imu.resetYaw();
             }
 
@@ -142,7 +148,7 @@ public class TeleOp8 extends LinearOpMode {
 
             }
             else if (gamepad1.dpad_down){
-                linear.runManual(-0.4,-0.4);
+                linear.runManual(-0.7,-0.7);
             }
             else{
                 linear.stop();
@@ -151,7 +157,7 @@ public class TeleOp8 extends LinearOpMode {
 
             // Pitch control
             if (gamepad1.left_bumper) {
-                liftMotor.setPower(0.5);
+                liftMotor.setPower(0.6);
             } else if (gamepad1.right_bumper) {
                 liftMotor.setPower(-0.6);
             } else {
@@ -167,20 +173,26 @@ public class TeleOp8 extends LinearOpMode {
                 claw.setPosition(CLOSED);
                 // or claw.setClamped();
             }
-            // linear.findLinearAngle();
-            double linearLeftPosition;  // current encoder position
-            linearLeftPosition = linear.getLeftPosition();
-            double countsPerRevolution = 1440;// number of ticks per revolution
-            linearAngle = (linearLeftPosition /  countsPerRevolution) * 360.0;
+
 
 
             // telemetry.addData("LinearLeftPosition" , linearLeftPosition);
             telemetry.addData("current Angle", linearAngle);
             telemetry.addData("Drive Front Left Power", claw.getPosition());;
             telemetry.addData("Drive Front Right Power", servo1.getPosition());
-            //telemetry.update();
-            // linear.printTelemetry();
+            telemetry.addData("leftPositionInches", linear.getLeftPosition());
+            telemetry.addData("rightPositionInches", linear.getRightPosition());
+            // //telemetry.update();
+            linear.printTelemetry();
             telemetry.update();
         }
     }
+    // public double leftPositionInches(){
+    //     leftPositionInches = linear.getLeftPosition() * INCHES_PER_TICK;
+    //     return leftPositionInches;
+    // }
+    // public double rightPositionInches(){
+    //     rightPositionInches = linear.getrightPosition() * INCHES_PER_TICK;
+    //     return rightPositionInches;
+    // }
 }
