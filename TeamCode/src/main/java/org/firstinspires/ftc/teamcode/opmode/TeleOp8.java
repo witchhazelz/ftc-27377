@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.subsystems.Linear;
+import org.firstinspires.ftc.teamcode.Linear;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -22,7 +23,6 @@ public class TeleOp8 extends LinearOpMode {
     // private DcMotorEx leftSlideMotor, rightSlideMotor;
     Linear linear = new Linear();
     public double linearAngle;
-
 
     // Pitch system
     private DcMotorEx liftMotor;
@@ -72,9 +72,9 @@ public class TeleOp8 extends LinearOpMode {
 
         // leftSlideMotor.setDirection(DcMotorEx.Direction.FORWARD);
         // rightSlideMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        linear.LinearSlides(hardwareMap);
-        leftSlidesInches = linear.getLeftPosition();
-        rightSlidesInches = linear.getRightPosition();
+        linear.LinearSlides(hardwareMap,imu);
+        //leftSlidesInches = linear.getLeftPosition();
+        //rightSlidesInches = linear.getRightPosition();
 
         // Initialize pitch system
         liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
@@ -101,7 +101,7 @@ public class TeleOp8 extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            double y = gamepad1.left_stick_y;
+            double y = gamepad1.left_stick_y * 0.5;
             double x = -gamepad1.left_stick_x;
             double rx = -gamepad1.right_stick_x * 0.5;
 
@@ -118,6 +118,11 @@ public class TeleOp8 extends LinearOpMode {
             if (gamepad1.right_stick_button) {
                 imu.resetYaw();
             }
+
+            // update the linear angle every loop
+            linear.updateLinearAngle();
+            //linear.getLeftPosition();
+            //linear.getRightPosition();
 
             // Wrist control
             if (gamepad1.a) {
@@ -177,12 +182,14 @@ public class TeleOp8 extends LinearOpMode {
 
 
             // telemetry.addData("LinearLeftPosition" , linearLeftPosition);
-            telemetry.addData("current Angle", linearAngle);
+            telemetry.addData("current Angle", linear.linearAngle);
             telemetry.addData("Drive Front Left Power", claw.getPosition());;
             telemetry.addData("Drive Front Right Power", servo1.getPosition());
+
+
             telemetry.addData("leftPositionInches", linear.getLeftPosition());
             telemetry.addData("rightPositionInches", linear.getRightPosition());
-            // //telemetry.update();
+            telemetry.update();
             linear.printTelemetry();
             telemetry.update();
         }
