@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import static org.firstinspires.ftc.teamcode.subsystems.RobotActions.robot;
+import static org.firstinspires.ftc.teamcode.subsystems.Common.robot;
 
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -10,6 +9,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.subsystems.Common;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 @Disabled
@@ -18,7 +18,7 @@ public abstract class AbstractAuto extends LinearOpMode {
     protected final void update() {
         robot.readSensors();
         robot.run();
-//        robot.printTelemetry();}
+    }
 
     @Override
     public final void runOpMode() {
@@ -38,7 +38,7 @@ public abstract class AbstractAuto extends LinearOpMode {
         Actions.runBlocking(
                 new ParallelAction(
                         action,
-                        new org.firstinspires.ftc.teamcode.auto.Actions.RunnableAction(() -> {
+                        new org.firstinspires.ftc.teamcode.roadrunner.Actions.RunnableAction(() -> {
                             update();
                             return opModeIsActive();
                         })
@@ -49,7 +49,10 @@ public abstract class AbstractAuto extends LinearOpMode {
     }
 
     protected void onInit() {}
+
     protected void configure() {}
+
     protected abstract Pose2d getStartPose();
+
     protected abstract Action onRun();
 }

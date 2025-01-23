@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.subsystems.Common.robot;
+
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -7,50 +10,76 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SleepAction;
 
 public class RobotActions {
-    public static Robot robot;
 
     public static Action intakeSample(){
         return new SequentialAction(
-                new InstantAction(() -> robot.pitch.moveToPosition(6)),
+                setPitch(6, 0.3),
                 new ParallelAction(
-                        new InstantAction(()-> robot.wrist.setDOWN(0.6)),
-                        new InstantAction(()->robot.claw.setOpened())
+                        setWrist(0.6,0.2),
+                        setClaw(false, 0.2)
                 ),
-                new SleepAction(0.3),
-                new InstantAction(()->robot.claw.setClamped())
+                setClaw(true, 0)
         );
     }
 
-    public static Action extendo() {
+    public static Action setUpBasket() {
         return new SequentialAction(
-                new InstantAction(() -> robot.wrist.setFORWARD(0.4)),
+                setWrist(0.4, 0.2),
                 new ParallelAction(
-                        new InstantAction(() -> robot.pitch.moveToPosition(13)),
-                        new InstantAction(() -> robot.linear.moveToPosition(20, 20))
+                        setPitch(20, 0.4),
+                        setLinear(20, 0)
                 )
         );
     }
 
     public static Action dropAndRetract() {
         return new SequentialAction(
-                new InstantAction(() -> robot.wrist.setDOWN(0.6)),
-                new InstantAction(() -> robot.claw.setOpened()),
-                new SleepAction(0.2),
                 new ParallelAction(
-                        new InstantAction(() -> robot.claw.setClamped()),
-                        new InstantAction(() -> robot.wrist.setFORWARD(0.4)),
-                        new InstantAction(() -> robot.pitch.moveToPosition(15)),
-                        new InstantAction(() -> robot.linear.moveToPosition(0, 0))
+                        setWrist(0.6, 0.2),
+                        setClaw(false, 0.2)
+                ),
+                new SleepAction(0.3),
+                new ParallelAction(
+                        setClaw(false, 0.5),
+                        setWrist(0.4, 0.5),
+                        setPitch(6, 0.5),
+                        setLinear(0, 0)
                 )
         );
     }
 
     public static Action park() {
         return new SequentialAction(
-                new InstantAction(() -> robot.pitch.moveToPosition(13)),
-                new InstantAction(() -> robot.linear.moveToPosition(10, 10))
+                setPitch(13, 0.2),
+                setLinear(10, 0)
         );
     }
 
+    private static Action setClaw(boolean isClosed, double sleepSeconds) {
+        return new ParallelAction(
+                new InstantAction(() -> robot.claw.setClaw(isClosed)),
+                new SleepAction(sleepSeconds)
+        );
+    }
 
+    private static Action setWrist(double target, double sleepSeconds) {
+        return new ParallelAction(
+                new InstantAction(() -> robot.wrist.setPosition(target)),
+                new SleepAction(sleepSeconds)
+        );
+    }
+
+    private static Action setPitch(double target, double sleepSeconds) {
+        return new ParallelAction(
+                new InstantAction(() -> robot.pitch.moveToPosition(target)),
+                new SleepAction(sleepSeconds)
+        );
+    }
+
+    private static Action setLinear(double target, double sleepSeconds) {
+        return new ParallelAction(
+                new InstantAction(() -> robot.linear.moveToPosition(target, target)),
+                new SleepAction(sleepSeconds)
+        );
+    }
 }

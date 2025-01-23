@@ -32,6 +32,11 @@ public class Wrist {
         leftServo.setPosition(targetPosition);
         rightServo.setPosition(targetPosition);
     }
+
+    public void setPosition(double pos) {
+        targetPosition = pos;
+    }
+
     public void setFORWARD (double FORWARD){
         leftServo.setPosition(FORWARD);
         rightServo.setPosition(FORWARD);
