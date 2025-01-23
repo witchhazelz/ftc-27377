@@ -1,6 +1,7 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -29,35 +30,47 @@ public class MeepMeepTesting {
         Pose2d startPose = new Pose2d(startingPositionX, startingPositionY, Math.toRadians(180));
 
         myBot.runAction(myBot.getDrive().actionBuilder(startPose)
-                .setTangent(270)
-                .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(225)), Math.toRadians(180))
-                .waitSeconds(1.0)
 
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(sample1X, collectSampleY, Math.toRadians(135)), Math.PI)
+                .lineToX(sample1X)
+                .setTangent(90)
+                .lineToY(collectSampleY)
                 .waitSeconds(0.4)
 
                 .setTangent(270)
-                .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(225)), Math.toRadians(180))
+                .lineToX(basketX)
+                .setTangent(90)
+                .lineToY(basketY)
                 .waitSeconds(1.0)
 
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(sample2X, collectSampleY, Math.toRadians(135)), Math.PI)
+                .lineToX(sample2X)
+                .setTangent(90)
+                .lineToY(collectSampleY)
                 .waitSeconds(0.4)
 
                 .setTangent(270)
-                .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(225)), Math.toRadians(180))
+                .lineToX(basketX)
+                .setTangent(90)
+                .lineToY(basketY)
                 .waitSeconds(1.0)
 
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(sample3X, collectSampleY, Math.toRadians(135)), Math.PI)
+                .lineToX(sample3X)
+                .setTangent(90)
+                .lineToY(collectSampleY)
                 .waitSeconds(0.4)
 
                 .setTangent(270)
-                .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(225)), Math.toRadians(180))
+                .lineToX(basketX)
+                .setTangent(90)
+                .lineToY(basketY)
                 .waitSeconds(1.0)
-                        .setTangent(45)
-                .splineToLinearHeading(new Pose2d(parkX, parkY, Math.toRadians(0)), Math.toRadians(60))
+
+                .setTangent(45)
+                .lineToX(parkX)
+                .setTangent(90)
+                .lineToY(parkY)
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
@@ -65,5 +78,7 @@ public class MeepMeepTesting {
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
                 .start();
+
+
     }
 }
