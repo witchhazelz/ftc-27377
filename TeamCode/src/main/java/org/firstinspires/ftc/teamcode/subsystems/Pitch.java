@@ -1,172 +1,144 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.controls.controllers.PIDController;
-import org.firstinspires.ftc.teamcode.controls.gainmatrices.PIDGains;
-import org.firstinspires.ftc.teamcode.controls.motion.State;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class Pitch {
-
-    // Constants
+    // constants
     private static final double kG = 0.1; // gravity compensation constant
     private static final double MAX_VOLTAGE = 13.0;
-    private static final double TICKS_PER_REV = 1440.0; // example value, adjust based on encoder specs
-    private static final double SPROCKET_RADIUS = 1.0; // radius in inches
+    private static final double TICKS_PER_REV = 1440.0; // example value --adjust based on encoder specs
+    private static final double SPROCKET_RADIUS = 2.8; // radius in inches
     private static final double RADIANS_PER_TICK = (2 * Math.PI) / TICKS_PER_REV;
     private static final double INCHES_PER_RADIAN = SPROCKET_RADIUS; // linear distance per radian
 
-    // Hardware and controller
+    // predefined positions for manual override
+    private static final double POSITION_A_RADIANS = Math.PI / 4; // predefined pos A (45 degrees)
+    private static final double POSITION_X_RADIANS = Math.PI / 2; // predefined pos X (90 degrees)
+    // (keep in radians, search up degrees to radians if needed)
+    //hardware+controller
     private final DcMotorEx liftMotor;
     private final VoltageSensor batteryVoltageSensor;
-    private final PIDController controller = new PIDController();
 
-    // Position tracking
+    // PID variables
+    private double kP = 0.0025;// how fast im going to the target
+    private double kI = 0.0017;// how fast i wanna build up
+    private double kD = 0.0001;// slow down when going to fast
     private double targetPositionRadians = 0.0;
-    //public boolean isFlat =
-
-    //do motor encoder thing, set that, then do the math yada yada, then after istantiate in constructor class
     private double currentPositionRadians = 0.0;
+    private double errorIntegral = 0.0;
+    private double lastError = 0.0;
+    public double ticksPerRotation;
 
     private final ElapsedTime timer = new ElapsedTime();
 
+    // power constants for manual movement
+    private static final double LIFT_UP_POWER = 0.5;
+    private static final double LIFT_DOWN_POWER = -0.5;
+
+    // mass of the object being lifted (adjust as needed)
+    private static final double MASS = 1.0; // in kg
+    private static final double GRAVITY = 9.81; // acceleration due to gravity in m/s^2
+
+    // constructor
     public Pitch(HardwareMap hardwareMap) {
-        // initialize hardware
         liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-    }
-        // set up PID gains PLEASE CHANGE THESE VALUES OR WE EILL BE INSANELY COOKED NAD I WILL CRY SO MUCH ANF YOU WILL HAVE TO BUY ME
-    //STAR OCEAN THE SECOND STORY R IN ORDER FOR ME TO BE OKAY
-        public static PIDGains pidGains = new PIDGains(
-                0.005,
-                0.002,
-                0,
-                Double.POSITIVE_INFINITY
-        );
+        liftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-    public Pitch(DcMotorEx liftMotor, VoltageSensor batteryVoltageSensor) {
-        this.liftMotor = liftMotor;
-        this.batteryVoltageSensor = batteryVoltageSensor;
+        liftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        ticksPerRotation = liftMotor.getMotorType().getTicksPerRev();
     }
 
-    /**
-     * move lift to a target position in linear inches
-     *
-     * @param targetPositionInches target position in linear inches
-     */
-    public void moveToPosition(double targetPositionInches) {
-        // convert linear target position to radians
-        this.targetPositionRadians = targetPositionInches / INCHES_PER_RADIAN;
+    public void moveToPositionRadians(double targetPositionRadians) {
+        this.targetPositionRadians = targetPositionRadians;
     }
 
-    /**
-     * run lift system (should be called repeatedly in a loop)
-     */
     public void run() {
-        // read current position in radians
         currentPositionRadians = liftMotor.getCurrentPosition() * RADIANS_PER_TICK;
 
-        // set PID target
-        controller.setTarget(new State(targetPositionRadians));
+        // PID calculations
+        double error = targetPositionRadians - currentPositionRadians;
+        errorIntegral += error * timer.seconds();
+        double errorDerivative = (error - lastError) / timer.seconds();
+        lastError = error;
 
-        // calculate PID output
-        double pidOutput = controller.calculate(new State(currentPositionRadians));
+        double pidOutput = (kP * error) + (kI * errorIntegral) + (kD * errorDerivative);
 
-        // apply gravity compensation and voltage scaling
+        // // gravity compensation and voltage scaling
+        // double voltageCompensation = MAX_VOLTAGE / batteryVoltageSensor.getVoltage();
+        // double totalOutput = (pidOutput + kG) * voltageCompensation;
+
+
+        // Calculate gravitational force and required power
+        double gravitationalForce = MASS * GRAVITY; // in Newtons
+        double requiredPower = gravitationalForce * SPROCKET_RADIUS; // in Watts
+
+        // Convert required power to motor power (assuming linear relationship)
+        double minPower = requiredPower / MAX_VOLTAGE; // normalize to motor power range
+
+        // clamp output power
+        //totalOutput = Math.max(-1.0, Math.min(1.0, totalOutput));
+
+        // Gravity compensation and voltage scaling
         double voltageCompensation = MAX_VOLTAGE / batteryVoltageSensor.getVoltage();
         double totalOutput = (pidOutput + kG) * voltageCompensation;
 
-        // clamp motor power between -1.0 and 1.0
+        // clamp output power
         totalOutput = Math.max(-1.0, Math.min(1.0, totalOutput));
 
-        // Apply power to motor
+        // Locking mechanism
+        if (Math.abs(totalOutput) <= minPower) {
+            // totalOutput = Math.signum(totalOutput) ?- minPower; // apply minimum power to hold position
+            totalOutput = (totalOutput < 0)?-minPower:minPower;
+        }
+
+
         liftMotor.setPower(totalOutput);
     }
 
-    /**
-     * manually control the lift with a specified power
-     *
-     * @param power Motor power (-1.0 to 1.0)
-     */
-    public void runManual(double power) {
-        double manualPower = scalePowerForLinearMotion(power);
-        liftMotor.setPower(manualPower);
-    }
+    public void controlLift(Gamepad gamepad) {
+        boolean leftBumper = gamepad.left_bumper;
+        boolean rightBumper = gamepad.right_bumper;
+        boolean overrideA = gamepad.a; // use the "A" button for manual override to pos A
+        boolean overrideX = gamepad.x; // use the "X" button for manual override to pos X
 
-    /**
-     * scale power based on current position and linear motion constraints
-     *
-     * @param power Raw power input
-     * @return Scaled power
-     */
-    private double scalePowerForLinearMotion(double power) {
-        // example scaling-reduce power as the lift approaches its maximum range
-        double maxLinearPosition = 2 * Math.PI * SPROCKET_RADIUS; // maximum linear range in inches
-        double scalingFactor = 1.0 - Math.min(1.0, Math.abs((currentPositionRadians * INCHES_PER_RADIAN) / maxLinearPosition));
-        return power * scalingFactor;
-    }
-
-    /**
-     * stop lift motor.
-     */
-    public void stop() {
-        liftMotor.setPower(0.0);
-    }
-
-    /**
-     * get current position of the lift in linear inches
-     *
-     * @return current position in linear inches
-     */
-    public double getPosition() {
-        return currentPositionRadians * INCHES_PER_RADIAN;
-    }
-    //do something like this:
-    // Add a boolean flag for flat state
-    private boolean isFlatFlag = false;  // default: not flat
-
-    /**
-     * sets pitch to flat or raised based on the current state
-     */
-    public void toggleFlat() {
-        if (isFlatFlag) {
-            moveToPosition(5.0);  // example target position for raised- adjust if needed
-            System.out.println("Raising to target position.");
+        if (overrideA) {
+            moveToPositionRadians(POSITION_A_RADIANS); // move to predefined pos A
+        } else if (overrideX) {
+            moveToPositionRadians(POSITION_X_RADIANS); // move to predefined pos X
+        } else if (leftBumper) {
+            currentPositionRadians = liftMotor.getCurrentPosition() * RADIANS_PER_TICK; // store current pos
+            moveToPositionRadians(currentPositionRadians + (Math.PI / 36)); // increment clockwise continuously
+        } else if (rightBumper) {
+            currentPositionRadians = liftMotor.getCurrentPosition() * RADIANS_PER_TICK; // store current pos
+            moveToPositionRadians(currentPositionRadians - (Math.PI / 36)); // decrement counterclockwise continuously
         } else {
-            moveToPosition(0.0);  // example target position for flat
-            System.out.println("Moving to flat position.");
+            moveToPositionRadians(currentPositionRadians);
+            run(); // lock the pos using PID
         }
-        isFlatFlag = !isFlatFlag;  // toggle the flag
     }
 
-    /**
-     * check if the system is in a flat position
-     * @return true if flat false otherwise.
-     */
-    public boolean isFlat() {
-        double tolerance = 0.1;  // define a small tolerance for checking
-        return Math.abs(getPosition()) < tolerance;
+    public void runManual(double power) {
+        liftMotor.setPower(power);
     }
 
-    /**
-     * enhanced run method to check flag and keep correct position.
-     */
-//    @Override
-//    public void run() {
-//        super.run();  // run the PID control (i guess)
-//        if (isFlatFlag && !isFlat()) {
-//            moveToPosition(0.0);  // keep moving to flat if not there
-//        }
-//    }
-    /**
-     * debug telemetry data
-     */
-    public void printTelemetry() {
-        System.out.println("Target Position (inches): " + (targetPositionRadians * INCHES_PER_RADIAN));
-        System.out.println("Current Position (inches): " + getPosition());
+    public double getMotorRotations(){
+        return liftMotor.getCurrentPosition() / TICKS_PER_REV;
+    }
+
+    public void stop() {
+        liftMotor.setPower(0);
+
+    }
+    public double getCurrentPosition(){
+        return liftMotor.getCurrentPosition();
+
     }
 }

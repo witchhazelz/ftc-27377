@@ -9,13 +9,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.subsystems.Linear;
+import org.firstinspires.ftc.teamcode.subsystems.Pitch;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-// this is the code we used for the comp, limits the exstension always
-
-@TeleOp(name = "TeleOp8")
-public class TeleOp8 extends LinearOpMode {
+@TeleOp(name = "TeleOp8 Test")
+public class TeleOp9 extends LinearOpMode {
 
     // Mecanum drive motors
     private DcMotorEx frontLeft, frontRight, backLeft, backRight;
@@ -24,10 +23,11 @@ public class TeleOp8 extends LinearOpMode {
     // Extension system
     // private DcMotorEx leftSlideMotor, rightSlideMotor;
     public Linear linear;
-    public double linearAngle;
+    // public double linearAngle;
 
     // Pitch system
     private DcMotorEx liftMotor;
+    public Pitch pitch;
 
     // Servo system
     private Servo servo1, servo2;
@@ -39,9 +39,8 @@ public class TeleOp8 extends LinearOpMode {
     public static final double OPEN = 0.15;// open
     public static final double CLOSED = 0.5;//closed
 
-    public static final double FORWARD = 0.45;
-    public static final double BACKWARD = 0.12;
-
+    public static final double FORWARD = 0.2;
+    public static final double BACKWARD = 0.7;
     public static final double DOWN = 0.6;
     private static final double INCHES_PER_TICK = 0.008;
 
@@ -79,17 +78,19 @@ public class TeleOp8 extends LinearOpMode {
 
         // leftSlideMotor.setDirection(DcMotorEx.Direction.FORWARD);
         // rightSlideMotor.setDirection(DcMotorEx.Direction.REVERSE);
+
+        pitch = new Pitch(hardwareMap);
         linear = new Linear(hardwareMap,imu);
+
         //leftSlidesInches = linear.getLeftPosition();
         //rightSlidesInches = linear.getRightPosition();
 
         // Initialize pitch system
-        liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
-        liftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        // liftMotor = hardwareMap.get(DcMotorEx.class, "liftMotor");
+        // liftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         //intitialize claw
         claw = hardwareMap.get(Servo.class,"clawServo");
-
         // set initial position
         claw.setPosition(CLOSED);
         double position = claw.getPosition();
@@ -106,25 +107,21 @@ public class TeleOp8 extends LinearOpMode {
         //hangServoRight = hardwareMap.get(Servo.class, "hangServoRight");
         hangServoLeft = hardwareMap.get(Servo.class, "hangServoLeft");
         //     // hangServoRight.setDirection(Servo.Direction.REVERSE);
-        //     // initialialize hardware
-
-        //     hangServoRight.setPosition(0.5);
-        //     hangServoLeft.setPosition(0.5);
-        //     double rightPosition = hangServoRight.getPosition();
-        //     //double leftPosition = hangServoRight.getPosition();
-        //   //boolean isUpright = true;
-
 
 
         //     telemetry.addData("Initialized", rightPosition);
-        //   // telemetry.addData("Initialized", leftPosition);
+        //    telemetry.addData("Initialized", leftPosition);
         //     telemetry.update();
+
+        double pitchMechanismAngle = 0;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         //if (isStopRequested()) return
         waitForStart();
+
+
 
         while (opModeIsActive()) {
             double y = gamepad1.left_stick_y * 0.5;
@@ -145,8 +142,16 @@ public class TeleOp8 extends LinearOpMode {
                 imu.resetYaw();
             }
 
+            pitchMechanismAngle = (pitch.getMotorRotations() * 360) / 4;
+
+            boolean isVertical = false;
+
+            if (pitchMechanismAngle >20 && pitchMechanismAngle < 40){
+                isVertical = true;
+            }
+
             // update the linear angle every loop
-            linear.updateLinearAngle();
+            //  linear.updateLinearAngle();
             //linear.getLeftPosition();
             //linear.getRightPosition();
 
@@ -166,27 +171,14 @@ public class TeleOp8 extends LinearOpMode {
             //      servo2.setPosition(DOWN);
             //  }
 
-            // Extension control
-            // if (gamepad1.dpad_down) {
-            //     leftSlideMotor.setPower(0.6);
-            //     rightSlideMotor.setPower(0.6);
-            // } else if (gamepad1.dpad_up) {
-            //     leftSlideMotor.setPower(-0.5);
-            //     rightSlideMotor.setPower(-0.5);
-            // } else {
-            //     leftSlideMotor.setPower(0);
-            //     rightSlideMotor.setPower(0);
-            // }
+
             if (gamepad1.dpad_up){
-                linear.runManual(0.75,0.75);
+                linear.runManual(0.75,0.75,isVertical);
 
             }
             else if (gamepad1.dpad_down){
-                linear.runManual(-0.7,-0.7);
+                linear.runManual(-0.4,-0.4,isVertical);
             }
-            // else if (gamepad1.dpad_left){
-            //     linear.hang();
-            // }
             else{
                 linear.stop();
             }
@@ -194,11 +186,11 @@ public class TeleOp8 extends LinearOpMode {
 
             // Pitch control
             if (gamepad1.left_bumper) {
-                liftMotor.setPower(0.6);
+                pitch.runManual(0.6);
             } else if (gamepad1.right_bumper) {
-                liftMotor.setPower(-0.6);
+                pitch.runManual(-0.6);
             } else {
-                liftMotor.setPower(0);
+                pitch.runManual(0);
             }
 
             //claw control
@@ -214,15 +206,28 @@ public class TeleOp8 extends LinearOpMode {
 
 
             // telemetry.addData("LinearLeftPosition" , linearLeftPosition);
-            telemetry.addData("current Angle", linear.linearAngle);
+            // telemetry.addData("Linear Angle (deg)", linear.linearAngle);
+            // telemetry.addData("Is Horizontal", linear.isHorizontal());
+            // telemetry.addData("Is Vertical", linear.isVertical());
+            // telemetry.addData("Raw IMU Pitch", imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.DEGREES));
+            // telemetry.addData("Raw IMU Roll", imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.DEGREES));
+            // telemetry.addData("Raw IMU Yaw", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
             telemetry.addData("Drive Front Left Power", claw.getPosition());;
             telemetry.addData("Drive Front Right Power", servo1.getPosition());
 
 
             telemetry.addData("leftPositionInches", linear.getLeftPosition());
             telemetry.addData("rightPositionInches", linear.getRightPosition());
-            telemetry.update();
-            linear.printTelemetry();
+            telemetry.addData("Pitch Motor Ticks", pitch.getCurrentPosition());
+            telemetry.addData("Pitch sprocket angle", pitchMechanismAngle);
+
+            //  telemetry.addData("Angle from Vertical", linear.getCurrentAngle());
+            // telemetry.addData("Is Vertical", linear.isVertical());
+            //telemetry.addData("IMU Pitch", imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.DEGREES));
+            telemetry.addData("Pitch Mechanism Angle", pitch.getMotorRotations() * 360.0);
+            //telemetry.addData("Combined Linear Angle", linear.linearAngle);
+            // telemetry.update();
+            // linear.printDetailedTelemetry();  // This will give us more debug info
             telemetry.update();
         }
     }
