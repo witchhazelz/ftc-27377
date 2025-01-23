@@ -41,11 +41,15 @@ public class Claw {
     }
 
     public void setClamped() {
-        isClosed=true;
+        isClosed = true;
     }
 
     public void setOpened(){
-        isClosed=false;
+        isClosed = false;
+    }
+
+    public void setClaw(boolean isActivated) {
+        isClosed = isActivated;
     }
 
     public void run(){

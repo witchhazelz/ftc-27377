@@ -18,8 +18,6 @@ public final class Robot {
     public final Pitch pitch;
     public final Wrist wrist;
 
-   // Wrist wrist = new Wrist();
-
     public final BulkReader bulkReader;
 
     public Robot(HardwareMap hardwareMap) {
