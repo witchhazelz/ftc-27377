@@ -9,6 +9,7 @@ public class Wrist {
     public Servo rightServo;
 
     public double FORWARD = 0.4;
+    public double targetPosition;
     public static double BACKWARD = 0.2;
     public static double DOWN = 0.6;
 
@@ -24,11 +25,13 @@ public class Wrist {
     }
 
     public void runManual(double position){
-        leftServo.setPosition(position);
-        rightServo.setPosition(position);
-
+        targetPosition=position;
     }
 
+    public void run(){
+        leftServo.setPosition(targetPosition);
+        rightServo.setPosition(targetPosition);
+    }
     public void setFORWARD (double FORWARD){
         leftServo.setPosition(FORWARD);
         rightServo.setPosition(FORWARD);

@@ -1,7 +1,6 @@
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -27,48 +26,38 @@ public class MeepMeepTesting {
                 .setDimensions(14, 16.5)
                 .build();
 
-        Pose2d startPose = new Pose2d(startingPositionX, startingPositionY, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(startingPositionX, startingPositionY, Math.toRadians(180));
 
         myBot.runAction(myBot.getDrive().actionBuilder(startPose)
-                // Move to basket facing it and wait
-                .setTangent(Math.toRadians(180))
-                .splineTo(new Vector2d(basketX, basketY), Math.toRadians(180))
+                .setTangent(270)
+                .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(225)), Math.toRadians(180))
                 .waitSeconds(1.0)
 
-                // Move to sample 1 facing forward (90 degrees) and wait
-                .setTangent(Math.toRadians(90))
-                .splineTo(new Vector2d(sample1X, collectSampleY), Math.toRadians(90))
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(sample1X, collectSampleY, Math.toRadians(135)), Math.PI)
+                .waitSeconds(0.4)
+
+                .setTangent(270)
+                .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(225)), Math.toRadians(180))
                 .waitSeconds(1.0)
 
-                // Return to basket and wait
-                .setTangent(Math.toRadians(180))
-                .splineTo(new Vector2d(basketX, basketY), Math.toRadians(180))
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(sample2X, collectSampleY, Math.toRadians(135)), Math.PI)
+                .waitSeconds(0.4)
+
+                .setTangent(270)
+                .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(225)), Math.toRadians(180))
                 .waitSeconds(1.0)
 
-                // Move to sample 2 facing forward (90 degrees) and wait
-                .setTangent(Math.toRadians(90))
-                .splineTo(new Vector2d(sample2X, collectSampleY), Math.toRadians(90))
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(sample3X, collectSampleY, Math.toRadians(135)), Math.PI)
+                .waitSeconds(0.4)
+
+                .setTangent(270)
+                .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(225)), Math.toRadians(180))
                 .waitSeconds(1.0)
-
-                // Return to basket and wait
-                .setTangent(Math.toRadians(180))
-                .splineTo(new Vector2d(basketX, basketY), Math.toRadians(180))
-                .waitSeconds(1.0)
-
-                // Move to sample 3 facing forward (90 degrees) and wait
-                .setTangent(Math.toRadians(90))
-                .splineTo(new Vector2d(sample3X, collectSampleY), Math.toRadians(90))
-                .waitSeconds(1.0)
-
-                // Return to basket and wait
-                .setTangent(Math.toRadians(270))
-                .splineTo(new Vector2d(basketX, basketY), Math.toRadians(45))
-                .waitSeconds(1.0)
-
-                // Park in the final position with minimal turning
-                .setTangent(Math.toRadians(90))
-                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(90))
-
+                        .setTangent(45)
+                .splineToLinearHeading(new Pose2d(parkX, parkY, Math.toRadians(0)), Math.toRadians(60))
                 .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)

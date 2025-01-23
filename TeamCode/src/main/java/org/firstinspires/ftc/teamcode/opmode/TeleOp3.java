@@ -65,7 +65,7 @@ public class TeleOp3 extends LinearOpMode {
                 claw.toggleClaw();
             }
             else if (gamepad1.b){
-                claw.setClamped(true);
+//                claw.setClamped(true);
                 // or claw.close();
             }
 

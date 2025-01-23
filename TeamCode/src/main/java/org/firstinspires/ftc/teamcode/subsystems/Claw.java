@@ -12,6 +12,7 @@ public class Claw {
 
     //private final SimpleServoPivot claw;
     private final Servo claw;
+    private boolean isClosed;
 
 //    public Claw(HardwareMap hardwareMap) {
 //        claw = new SimpleServoPivot(DEPOSIT_ANGLE, CLAMP_ANGLE, SimpleServoPivot.getGoBildaServo(hardwareMap, "claw"));
@@ -37,6 +38,19 @@ public class Claw {
 
     public void setClawClosed(){
         claw.setPosition(CLAMP_ANGLE);
+    }
+
+    public void setClamped() {
+        isClosed=true;
+    }
+
+    public void setOpened(){
+        isClosed=false;
+    }
+
+    public void run(){
+        claw.setPosition(isClosed ? CLAMP_ANGLE : DEPOSIT_ANGLE);
+
     }
 //
 //    public boolean getClamped() {
