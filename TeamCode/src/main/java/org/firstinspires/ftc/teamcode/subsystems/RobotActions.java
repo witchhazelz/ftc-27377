@@ -25,7 +25,7 @@ public class RobotActions {
         return new SequentialAction(
                 new InstantAction(() -> robot.wrist.setFORWARD(0.4)),
                 new ParallelAction(
-                        new InstantAction(() -> robot.pitch.moveToPosition(190)),
+                        new InstantAction(() -> robot.pitch.moveToPosition(13)),
                         new InstantAction(() -> robot.linear.moveToPosition(20, 20))
                 )
         );
@@ -35,37 +35,22 @@ public class RobotActions {
         return new SequentialAction(
                 new InstantAction(() -> robot.wrist.setDOWN(0.6)),
                 new InstantAction(() -> robot.claw.setOpened()),
-                new InstantAction(() -> robot.claw.setClamped()),
-                new InstantAction(() -> robot.wrist.setFORWARD(0.4)),
-                new InstantAction(() -> robot.pitch.moveToPosition(195)),
+                new SleepAction(0.2),
                 new ParallelAction(
-                        new InstantAction(() -> robot.linear.moveToPosition(0, 0)),
-                        new InstantAction(() -> robot.pitch.run())
+                        new InstantAction(() -> robot.claw.setClamped()),
+                        new InstantAction(() -> robot.wrist.setFORWARD(0.4)),
+                        new InstantAction(() -> robot.pitch.moveToPosition(15)),
+                        new InstantAction(() -> robot.linear.moveToPosition(0, 0))
                 )
         );
     }
 
     public static Action park() {
         return new SequentialAction(
-                new InstantAction(() -> robot.pitch.moveToPosition(190)),
+                new InstantAction(() -> robot.pitch.moveToPosition(13)),
                 new InstantAction(() -> robot.linear.moveToPosition(10, 10))
         );
     }
 
-    public static Action fullSequence() {
-        return new SequentialAction(
-                extendo(),
-                dropAndRetract(),
-                intakeSample(),
-                extendo(),
-                dropAndRetract(),
-                intakeSample(),
-                extendo(),
-                dropAndRetract(),
-                intakeSample(),
-                extendo(),
-                dropAndRetract(),
-                park()
-        );
-    }
+
 }

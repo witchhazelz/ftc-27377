@@ -34,10 +34,10 @@ public final class Robot {
         linear.LinearSlides(hardwareMap);
     }
 
-//    public void readSensors() {
-//        bulkReader.bulkRead();
-//        drivetrain.updatePoseEstimate();
-//    }
+   public void readSensors() {
+        bulkReader.bulkRead();
+        drivetrain.updatePoseEstimate();
+    }
 
     public void run() {
         // read sensor data first
