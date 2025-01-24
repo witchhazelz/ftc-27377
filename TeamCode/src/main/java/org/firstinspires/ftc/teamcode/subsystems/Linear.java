@@ -20,7 +20,7 @@ public class Linear {
      * Maximum safe extension distance for the linear slides when horizontal (in inches).
      * DO NOT MODIFY THIS VALUE WITHOUT TEAM APPROVAL - Exceeding this limit risks damage to the robot.
      */
-    private static final double MAX_HORIZONTAL_EXTENSION = 14.5;
+    private static final double MAX_HORIZONTAL_EXTENSION = 14.5;// these values need to be adjusted before comp
 
     private static final double MAX_VERTICAL_EXTENSION = 26.5;
 
