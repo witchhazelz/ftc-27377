@@ -77,6 +77,9 @@ public class Claw {
 
     }
 
+    public void toggleClaw() {
+    }
+
 //    public void stop() {
 //        claw.setActivated(true);
 //    }

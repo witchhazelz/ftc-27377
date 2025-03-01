@@ -15,8 +15,8 @@ public class Wrist {
 
     public double newRightServoPosition;
     public double newLeftServoPosition;
-    public double leftServoPosition = leftServo.getPosition();
-    public double rightServoPosition = rightServo.getPosition();
+    public double leftServoPosition;
+    public double rightServoPosition;
 
     public void init (HardwareMap hardwareMap){
         leftServo = hardwareMap.get(Servo.class, "leftServo");
