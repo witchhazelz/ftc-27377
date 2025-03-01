@@ -29,6 +29,9 @@ public class Wrist {
     }
 
     public void run(){
+        leftServoPosition = leftServo.getPosition();
+        rightServoPosition = rightServo.getPosition();
+
         leftServo.setPosition(targetPosition);
         rightServo.setPosition(targetPosition);
     }
